@@ -4,10 +4,12 @@
 
 1. Provider-independent native speech, original voice profile, voice laboratory, lifecycle tests.
 2. Shared command/state foundation, safe-tool registry, macOS command dashboard, reusable animated core, sample dashboard provider, menu bar, and persistent settings.
+3. Explicit screenshot capture with permission checks and mock vision analyzer.
+4. Safari page-text reading, optional Apple on-device interpretation, and manual Copy for ChatGPT handoff. No paid cloud API is configured.
 
 ## Next Phase 1 work
 
-1. Connect a real vision provider behind `VisionAnalyzer` so the existing business dashboard in Safari can be interpreted when explicitly requested. The on-demand pipeline, centralized permission, ScreenContext, one-frame native capture, MockVisionAnalyzer, and denied-permission tests are now in place. No continuous capture or cloud upload.
+1. Verify Safari permissions and page extraction on the user's existing dashboard. Add a supported backend data provider if the dashboard's API contract is supplied. Keep charts and screenshots explicit; no continuous capture or silent cloud upload.
 2. iPhone shell and Xcode project/workspace: shared UI, text interface, settings, explicit unconfigured Mac connection, simulator build/run verification.
 3. Provider-independent mock AI, short-term memory, refined business/market models, and richer developer diagnostics.
 4. Complete platform smoke tests, voice audition, accessibility/performance checks, and the full Phase 1 acceptance checklist before declaring the foundation complete.

@@ -17,14 +17,16 @@ A native personal AI operating layer for macOS and, eventually, iPhone. The curr
 | Persistent voice preferences and dashboard URL | Implemented; URL save/clear live-tested |
 | Neural style, metallic processing, recognition, wake word | Planned |
 | On-demand Safari/display capture and vision boundary | Implemented; Screen Recording permission and explicit target selection required; analyzer is a mock |
-| Conversational AI and live dashboard integrations | Planned |
+| Direct Safari page reading | Implemented; reads rendered dashboard text/tables on explicit request |
+| Dashboard text analysis | Apple on-device model when available (macOS 26+); exact excerpt and Copy for ChatGPT otherwise |
+| Dashboard backend API and general conversational AI | Planned |
 | iPhone application | Planned; shared core and UI type-check for iOS 17+ |
 
-Phase 1 is **not complete**. No Phase 2 AI provider or microphone integration has been started.
+Phase 1 is **not complete**. Dashboard reading now has a bounded local analysis provider. No paid cloud API or microphone integration is configured.
 
 ## Run on macOS
 
-Requires macOS 14+ and Xcode with Swift 6. No API keys or third-party dependencies are needed.
+Requires macOS 14+ and Xcode 26+ with Swift 6 to build. On-device AI needs macOS 26 and an available Apple Intelligence model; page reading and manual ChatGPT handoff work without it. No API keys or third-party dependencies are needed.
 
 ```sh
 ./Scripts/build-macos.sh
@@ -48,17 +50,20 @@ swift run UltronVoicePreview
 - `Open File /absolute/path/to/document.pdf`
 - `Show Business`, `Show Markets`, `Show Projects`, `Show Today`
 - `Look at my screen` → asks for Screen Recording permission and a display, then runs the development analyzer
-- `Analyze my dashboard` → asks for Screen Recording permission and a Safari window, then runs the development analyzer
+- `Analyze my dashboard`, `What are we seeing?`, `Read my dashboard` → read text from Safari's front tab on the configured dashboard origin; analyze locally when available
+- `Capture dashboard` → explicitly select a Safari window for a screenshot; this separate vision path still uses the development mock
 
 Application launching uses a small bundle-identifier allowlist. Missing or unsupported apps return a useful error. File opening permits ordinary folders, plain text, PDFs, and common image formats; packages, executable files, and special files are rejected. Stop cancels pending coordination and speech, but cannot undo a launch already accepted by macOS.
 
-The menu bar uses the same session as the dashboard. It offers Open ULTRON, Open TradeScale, Show Markets, Stop, Settings, and Quit.
+The menu bar uses the same session as the dashboard. It includes Open ULTRON, Open TradeScale, Show Markets, Analyze Dashboard, Look at Screen, Stop, Settings, and Quit.
 
 ## Configuration and privacy
 
-Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; it does not rebuild or replace it. Safari handles your existing login session. Analysis is explicit and currently uses a development mock analyzer. The UI does not expose nonfunctional neural style/processing controls.
+Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; Safari handles your login. Analysis reads the rendered page on request. It does not access login tokens or the site's private backend APIs.
 
-No microphone, speech-recognition, screen-recording, or Accessibility permission is requested. No cloud AI, analytics, background capture, or command-text logging is implemented. The conversation is in memory and limited to 40 entries. Web links explicitly open in Safari, regardless of the system default browser, and use Safari's network and existing account session.
+Direct page reading needs Automation access to Safari and Safari's Allow JavaScript from Apple Events setting. It does not require Screen Recording. Screenshot commands separately request Screen Recording. No microphone or Accessibility permission is requested. Page data stays in memory; only clicking Copy for ChatGPT places it on your clipboard for you to paste manually. ULTRON makes no cloud inference request. The conversation is limited to 40 in-memory entries, and the latest page snapshot is cleared by Stop or a new command.
+
+Bring the correct dashboard tab to the front in Safari before analysis. Hidden content and form fields are excluded. Offscreen rendered text can be included, but iframe/shadow content, canvas charts, other tabs, and off-page data are not read. The local model sees at most 6,000 bytes of text and reports that limit. Treat model conclusions as interpretations to verify against the displayed values.
 
 ## Architecture and tree
 
@@ -68,7 +73,9 @@ Sources/
   UltronCore/
     Commands/              Parser, intents, asynchronous command coordinator
     Configuration/         Validated dashboard URL
-    Dashboard/             Provider protocol and sample modules
+    Dashboard/             Page reading/analysis interfaces, extraction, and sample modules
+    Permissions/           On-demand Screen Recording interface
+    Vision/                Separate screenshot and mock vision pipeline
     State/                 Shared operation-aware state machine
     Tools/                 Registry, risk gate, safe-tool interfaces, file policy
     Voice/                 Speech protocol, profile, Apple adapter, controller
@@ -87,6 +94,6 @@ See [architecture](docs/architecture.md), [security](docs/security.md), [permiss
 swift test
 ```
 
-The 19 tests cover parser normalization, configuration validation, safe file policy, sample dashboard data, state ownership, registry routing, risk rejection, native speech capabilities, stale callbacks, cancellation, and success/failure speech behavior. No network or system application launch is required by the tests.
+The 34 tests cover commands, state/risk boundaries, speech, capture, Safari scope checks, cancellation, and page extraction. Native WebKit fixture tests verify hidden/form exclusions and table extraction without opening your dashboard. They need a macOS session able to launch WebKit's helper processes; a restrictive command sandbox may block them.
 
 Screenshots: the dashboard has been visually inspected; repository screenshots will be added after the visual identity is refined.

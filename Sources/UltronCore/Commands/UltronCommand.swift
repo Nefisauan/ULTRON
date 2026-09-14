@@ -21,6 +21,7 @@ public enum UltronIntent: Equatable, Sendable {
     case showModule(DashboardModuleID)
     case captureScreen
     case analyzeDashboard
+    case captureDashboard
 
     public var toolIdentifier: String? {
         switch self {
@@ -29,7 +30,8 @@ public enum UltronIntent: Equatable, Sendable {
         case .openDashboard, .openURL: "open-url"
         case .openFile: "open-file"
         case .showModule: "show-dashboard-module"
-        case .captureScreen, .analyzeDashboard: "capture-screen"
+        case .captureScreen, .captureDashboard: "capture-screen"
+        case .analyzeDashboard: "read-dashboard"
         }
     }
 }
@@ -52,9 +54,18 @@ public enum CommandError: LocalizedError, Equatable {
     case captureUnavailable
     case safariWindowUnavailable
     case captureFailed
+    case pageEmpty, pageTooLarge, wrongSafariPage, safariReadFailed, safariReadTimedOut
+    case safariAutomationRequired, safariJavaScriptRequired
 
     public var errorDescription: String? {
         switch self {
+        case .pageEmpty: "Safari returned no readable page text. Let the dashboard load and sign in if needed. Visual-only charts may require an explicit screenshot."
+        case .pageTooLarge: "The page response exceeded the reading limit. Open a smaller dashboard view and retry."
+        case .wrongSafariPage: "Bring your configured dashboard tab to the front in Safari, then ask again. No other site's page text was accepted."
+        case .safariReadFailed: "Safari could not read the dashboard. Check that the page is loaded and Safari permits automation."
+        case .safariReadTimedOut: "Safari did not respond in time. Check any permission prompt and try again."
+        case .safariAutomationRequired: "Allow ULTRON to control Safari in System Settings → Privacy & Security → Automation, then retry."
+        case .safariJavaScriptRequired: "Safari could not run the page reader. In Safari Settings → Advanced, enable features for web developers, then enable Develop → Allow JavaScript from Apple Events and retry."
         case .screenPermissionRequired: "ULTRON needs Screen Recording permission. Enable ULTRON in System Settings → Privacy & Security → Screen & System Audio Recording, then restart ULTRON if macOS asks and retry."
         case .captureUnavailable: "No capturable display is available. Check Screen Recording permission and try again."
         case .safariWindowUnavailable: "Open your dashboard in a visible Safari window, then ask again."

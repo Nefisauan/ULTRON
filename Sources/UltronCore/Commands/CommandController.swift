@@ -50,7 +50,8 @@ public final class CommandController: ObservableObject {
                 if intent == .greet {
                     result = .init(message: "Yes?")
                 } else {
-                    stateMachine.transition(to: intent.toolIdentifier == "capture-screen" ? .seeing : .acting, for: operation)
+                    let isReading = intent.toolIdentifier == "capture-screen" || intent.toolIdentifier == "read-dashboard"
+                    stateMachine.transition(to: isReading ? .seeing : .acting, for: operation)
                     let toolContext = UltronToolContext(dashboard: context.dashboard) { [weak self] activity in
                         self?.stateMachine.transition(to: activity.state, for: operation)
                     }
@@ -90,6 +91,7 @@ public final class CommandController: ObservableObject {
         task?.cancel()
         task = nil
         isExecuting = false
+        lastResult = nil
         voice.stop()
     }
 

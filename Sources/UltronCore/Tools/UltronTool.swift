@@ -32,10 +32,12 @@ public struct UltronToolContext: Sendable {
 public struct UltronToolResult: Equatable, Sendable {
     public let message: String
     public let selectedModule: DashboardModuleID?
+    public let pageSnapshot: DashboardPage?
 
-    public init(message: String, selectedModule: DashboardModuleID? = nil) {
+    public init(message: String, selectedModule: DashboardModuleID? = nil, pageSnapshot: DashboardPage? = nil) {
         self.message = message
         self.selectedModule = selectedModule
+        self.pageSnapshot = pageSnapshot
     }
 }
 

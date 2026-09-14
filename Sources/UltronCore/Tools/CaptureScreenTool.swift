@@ -17,7 +17,7 @@ public struct CaptureScreenTool: UltronTool {
         let target: ScreenCaptureTarget
         switch intent {
         case .captureScreen: target = .display
-        case .analyzeDashboard: target = .safariWindow
+        case .captureDashboard: target = .safariWindow
         default: throw CommandError.invalidInput
         }
         try Task.checkCancellation()

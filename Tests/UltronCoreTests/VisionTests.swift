@@ -72,7 +72,7 @@ final class VisionTests: XCTestCase {
         let analyzer = TestAnalyzer()
         let tool = CaptureScreenTool(permissions: permissions, capturer: capture, analyzer: analyzer)
         var progress: UltronState?
-        let result = try await tool.execute(.analyzeDashboard, context: .init(dashboard: .init()) { progress = $0.state })
+        let result = try await tool.execute(.captureDashboard, context: .init(dashboard: .init()) { progress = $0.state })
         XCTAssertEqual(permissions.requests, 0)
         XCTAssertEqual(capture.targets.count, 1)
         if case .safariWindow = capture.targets[0] {} else { XCTFail("Wrong capture scope") }
@@ -118,7 +118,7 @@ final class VisionTests: XCTestCase {
     func testDashboardAnalysisIsAnExplicitIntent() throws {
         XCTAssertEqual(try CommandParser().parse("Analyze my dashboard"), .analyzeDashboard)
         XCTAssertEqual(try CommandParser().parse("Analyze TradeScale"), .analyzeDashboard)
-        XCTAssertEqual(try CommandParser().parse("Analyze this"), .captureScreen)
+        XCTAssertEqual(try CommandParser().parse("Analyze this"), .analyzeDashboard)
         XCTAssertEqual(try CommandParser().parse("Open TradeScale"), .openDashboard)
     }
 }

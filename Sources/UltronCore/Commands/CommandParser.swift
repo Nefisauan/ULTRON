@@ -5,10 +5,13 @@ public struct CommandParser: Sendable {
     private static let exact: [String: UltronIntent] = [
         "hey ultron": .greet, "hello": .greet, "hi": .greet,
         "open tradescale": .openDashboard, "open dashboard": .openDashboard,
+        "open my dashboard": .openDashboard, "open my business dashboard": .openDashboard,
         "show business": .showModule(.business), "show markets": .showModule(.markets),
         "show projects": .showModule(.projects), "show today": .showModule(.today),
         "look at my screen": .captureScreen, "look at this": .captureScreen,
-        "what are we seeing": .captureScreen, "analyze this": .captureScreen,
+        "what are we seeing": .analyzeDashboard, "analyze this": .analyzeDashboard,
+        "read my dashboard": .analyzeDashboard, "read dashboard": .analyzeDashboard,
+        "capture dashboard": .captureDashboard, "screenshot dashboard": .captureDashboard,
         "analyze dashboard": .analyzeDashboard, "analyze my dashboard": .analyzeDashboard,
         "analyze my business dashboard": .analyzeDashboard, "analyze tradescale": .analyzeDashboard
     ]

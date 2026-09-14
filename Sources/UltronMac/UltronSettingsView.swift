@@ -40,10 +40,18 @@ struct UltronSettingsView: View {
                 Text("Original voice direction. Neural style and metallic processing are planned. Changes apply to the next response.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            Section("Screen vision") {
+            Section("Dashboard reading") {
+                Text("“Analyze my dashboard” reads rendered text from the front Safari tab on your configured dashboard's site.")
+                Text(OnDeviceDashboardAnalyzer.availabilityDescription).font(.caption)
+                Text("No paid API is configured. Analysis uses Apple's on-device model when available. Otherwise, review the page text and copy it into your existing ChatGPT account.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Text("Requires permission to automate Safari and Safari's Develop → Allow JavaScript from Apple Events setting. ULTRON does not change these permissions automatically.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section("Optional screen capture") {
                 Text("Screen Recording: \(permissions.status == .granted ? "Granted" : "Not granted")")
                 Button("Refresh permission status") { permissions.refresh() }
-                Text("Use “Analyze my dashboard” to select a Safari window, or “Look at my screen” for a display. Each request captures one frame locally. The current analyzer is a mock; it does not interpret dashboard data.")
+                Text("Use “Capture dashboard” to select a Safari window, or “Look at my screen” for a display. This separate capture path still uses a mock vision analyzer. Normal dashboard analysis reads page text instead.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("Privacy & devices") {

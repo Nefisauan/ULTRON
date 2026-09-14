@@ -10,7 +10,7 @@ final class CommandParserTests: XCTestCase {
         XCTAssertEqual(try parser.parse("show business"), .showModule(.business))
         XCTAssertEqual(try parser.parse("Open TradeScale"), .openDashboard)
         XCTAssertEqual(try parser.parse("Open Xcode"), .openApplication("Xcode"))
-        XCTAssertEqual(try parser.parse("What are we seeing?"), .captureScreen)
+        XCTAssertEqual(try parser.parse("What are we seeing?"), .analyzeDashboard)
     }
 
     func testPathsAndURLsPreserveCaseAndContent() throws {

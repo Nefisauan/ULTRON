@@ -1,4 +1,16 @@
-# Verification — September 13, 2026
+# Verification — September 14, 2026
+
+## Safari page reading and local analysis (0.4.0)
+
+- Full Swift test suite: **34 tests, 0 failures**, including Safari script compilation and rendered WebKit fixtures for hidden/private/form text exclusion, tables, and origin checks. Native helper tests require running outside the command sandbox.
+- macOS app packaging and ad-hoc signature verification passed. Updated app installed locally and relaunched; saved dashboard configuration survived.
+- Shared core Swift 6 type-check for the arm64 iOS 17 simulator passed using the installed iOS 26.2 SDK.
+- Live settings report that Apple's on-device model is ready on this Mac.
+- Live `Analyze my dashboard` reached Safari and reported its disabled JavaScript-from-Apple-Events setting with actionable instructions. No permission was changed automatically. End-to-end dashboard interpretation remains pending that user-controlled setting.
+- No cloud API or paid provider was configured. Copy for ChatGPT is a manual clipboard handoff; it does not submit data.
+- The user previously confirmed successful screen capture. That separate path still uses the development vision analyzer.
+
+The following records describe earlier milestones.
 
 ## Automated
 

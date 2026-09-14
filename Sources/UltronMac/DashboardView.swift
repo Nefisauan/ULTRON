@@ -9,6 +9,7 @@ struct DashboardView: View {
     @ObservedObject private var stateMachine: UltronStateMachine
     @State private var input = ""
     @State private var showDeveloper = false
+    @State private var showPageReview = false
 
     init(session: MacSession) {
         self.session = session
@@ -47,12 +48,19 @@ struct DashboardView: View {
             }.padding(28)
             if let error = session.setupError { Text(error).foregroundStyle(.orange).padding(.horizontal) }
             if showDeveloper { developerPanel }
+            if commands.lastResult?.pageSnapshot != nil {
+                Button("Review Page Text / Copy for ChatGPT") { showPageReview = true }.padding(.bottom, 10)
+            }
             commandBar
         }
         .frame(minWidth: 940, minHeight: 790)
         .background(Color(red: 0.025, green: 0.035, blue: 0.052))
         .preferredColorScheme(.dark)
         .task { await session.loadDashboard() }
+        .sheet(isPresented: $showPageReview) {
+            if let page = commands.lastResult?.pageSnapshot { DashboardPageReview(page: page) }
+            else { Text("This reading has been cleared. Read the dashboard again.").padding() }
+        }
     }
 
     private var header: some View {
@@ -75,7 +83,7 @@ struct DashboardView: View {
         case .acting: "Executing your request."
         case .speaking: "Responding."
         case .error: stateMachine.errorMessage ?? "The request could not be completed."
-        case .seeing: "Selecting and capturing one frame."
+        case .seeing: "Reading the requested context."
         case .listening: "Listening."
         }
     }
@@ -112,7 +120,7 @@ struct DashboardView: View {
                     if commands.conversation.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("A direct line to your workspace.").foregroundStyle(.primary)
-                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nCommands are typed. Screen capture is on demand; the vision analyzer is a development mock.")
+                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nCommands are typed. Dashboard analysis reads Safari page text; screenshots are optional.")
                                 .foregroundStyle(.secondary)
                         }.font(.callout).padding(18)
                     }
@@ -144,14 +152,15 @@ struct DashboardView: View {
                     .buttonStyle(.borderedProminent).tint(.cyan).disabled(input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .accessibilityLabel("Run command")
             }.padding(15).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
-            Text("Safari · Xcode · Calculator · TradeScale · Show Business / Markets / Projects / Today")
+            Text("Open TradeScale · Analyze my dashboard · Show Business / Markets / Projects / Today")
                 .font(.caption2).foregroundStyle(.secondary)
         }.padding(.horizontal, 28).padding(.bottom, 22)
     }
 
     private var developerPanel: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("STATE: \(stateMachine.state.rawValue) · Speech: Apple native · AI: not configured").font(.caption.monospaced())
+            Text("STATE: \(stateMachine.state.rawValue) · Speech: Apple native · Analysis: Apple on-device / page excerpt").font(.caption.monospaced())
+            Text("Build \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "development")").font(.caption2.monospaced())
             Text("Tools: \(commands.registry.descriptors.map(\.identifier).joined(separator: ", "))").font(.caption2.monospaced())
             Text("Voice pulses use word timing. Screen Recording is requested only for explicit capture. No microphone or Accessibility access.").font(.caption2).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 28).padding(.bottom, 12)
