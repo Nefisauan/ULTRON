@@ -36,6 +36,12 @@ public struct SpeechVoice: Identifiable, Equatable, Sendable {
     public let id: String
     public let name: String
     public let language: String
+
+    public init(id: String, name: String, language: String) {
+        self.id = id
+        self.name = name
+        self.language = language
+    }
 }
 
 public struct SpeechCapabilities: Sendable {
