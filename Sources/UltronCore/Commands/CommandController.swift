@@ -50,8 +50,11 @@ public final class CommandController: ObservableObject {
                 if intent == .greet {
                     result = .init(message: "Yes?")
                 } else {
-                    stateMachine.transition(to: intent == .captureScreen ? .seeing : .acting, for: operation)
-                    result = try await registry.execute(intent, context: context)
+                    stateMachine.transition(to: intent.toolIdentifier == "capture-screen" ? .seeing : .acting, for: operation)
+                    let toolContext = UltronToolContext(dashboard: context.dashboard) { [weak self] activity in
+                        self?.stateMachine.transition(to: activity.state, for: operation)
+                    }
+                    result = try await registry.execute(intent, context: toolContext)
                 }
                 try Task.checkCancellation()
                 guard stateMachine.owns(operation) else { return }

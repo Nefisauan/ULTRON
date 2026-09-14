@@ -11,7 +11,7 @@ struct UltronMacApp: App {
                 .onAppear { NSApp.setActivationPolicy(.regular) }
         }
         .defaultSize(width: 1120, height: 800)
-        Settings { UltronSettingsView(preferences: session.preferences, voices: session.synthesizer.availableVoices) }
+        Settings { UltronSettingsView(preferences: session.preferences, voices: session.synthesizer.availableVoices, permissions: session.permissions) }
         MenuBarExtra("ULTRON", systemImage: "circle.hexagongrid.fill") {
             MenuActions(session: session)
         }
@@ -31,6 +31,16 @@ private struct MenuActions: View {
             openWindow(id: "main")
             NSApp.activate(ignoringOtherApps: true)
             session.submit("Show Markets")
+        }
+        Button("Analyze Dashboard") {
+            openWindow(id: "main")
+            NSApp.activate(ignoringOtherApps: true)
+            session.submit("Analyze my dashboard")
+        }
+        Button("Look at Screen") {
+            openWindow(id: "main")
+            NSApp.activate(ignoringOtherApps: true)
+            session.submit("Look at my screen")
         }
         Button("Stop") { session.commands.stop() }
         Divider()

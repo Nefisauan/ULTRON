@@ -4,6 +4,7 @@ import UltronCore
 struct UltronSettingsView: View {
     @ObservedObject var preferences: LocalPreferences
     let voices: [SpeechVoice]
+    @ObservedObject var permissions: MacPermissionService
     @State private var dashboardURL = ""
     @State private var status: String?
 
@@ -39,14 +40,23 @@ struct UltronSettingsView: View {
                 Text("Original voice direction. Neural style and metallic processing are planned. Changes apply to the next response.")
                     .font(.caption).foregroundStyle(.secondary)
             }
+            Section("Screen vision") {
+                Text("Screen Recording: \(permissions.status == .granted ? "Granted" : "Not granted")")
+                Button("Refresh permission status") { permissions.refresh() }
+                Text("Use “Analyze my dashboard” to select a Safari window, or “Look at my screen” for a display. Each request captures one frame locally. The current analyzer is a mock; it does not interpret dashboard data.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
             Section("Privacy & devices") {
-                Text("Speech uses installed Apple voices. No microphone monitoring, screen capture, or cloud AI is active.")
+                Text("Speech uses installed Apple voices. No microphone monitoring or cloud AI is active. Screen capture occurs only when requested.")
                 Text("Mac ↔ iPhone connection: Not configured.")
-                Text("AI, vision, live data, and speech recognition are planned.")
+                Text("Live AI vision, live data integrations, and speech recognition are planned.")
                     .foregroundStyle(.secondary)
             }
         }.formStyle(.grouped).padding().frame(width: 620, height: 650)
-            .onAppear { dashboardURL = preferences.dashboard.url?.absoluteString ?? "" }
+            .onAppear {
+                dashboardURL = preferences.dashboard.url?.absoluteString ?? ""
+                permissions.refresh()
+            }
     }
 
     private func slider(_ title: String, value: Binding<Double>, range: ClosedRange<Double>) -> some View {

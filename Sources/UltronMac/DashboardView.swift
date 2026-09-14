@@ -75,7 +75,7 @@ struct DashboardView: View {
         case .acting: "Executing your request."
         case .speaking: "Responding."
         case .error: stateMachine.errorMessage ?? "The request could not be completed."
-        case .seeing: "Preparing the screen request."
+        case .seeing: "Selecting and capturing one frame."
         case .listening: "Listening."
         }
     }
@@ -112,7 +112,7 @@ struct DashboardView: View {
                     if commands.conversation.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("A direct line to your workspace.").foregroundStyle(.primary)
-                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nCommands are typed. Microphone and screen capture are not active.")
+                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nCommands are typed. Screen capture is on demand; the vision analyzer is a development mock.")
                                 .foregroundStyle(.secondary)
                         }.font(.callout).padding(18)
                     }
@@ -153,7 +153,7 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("STATE: \(stateMachine.state.rawValue) · Speech: Apple native · AI: not configured").font(.caption.monospaced())
             Text("Tools: \(commands.registry.descriptors.map(\.identifier).joined(separator: ", "))").font(.caption2.monospaced())
-            Text("Voice pulses use word timing. No microphone, screen, or Accessibility permissions requested.").font(.caption2).foregroundStyle(.secondary)
+            Text("Voice pulses use word timing. Screen Recording is requested only for explicit capture. No microphone or Accessibility access.").font(.caption2).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 28).padding(.bottom, 12)
     }
 

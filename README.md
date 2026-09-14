@@ -16,7 +16,7 @@ A native personal AI operating layer for macOS and, eventually, iPhone. The curr
 | Menu bar actions | Implemented; dedicated status-menu interaction pending |
 | Persistent voice preferences and dashboard URL | Implemented; URL save/clear live-tested |
 | Neural style, metallic processing, recognition, wake word | Planned |
-| Screen capture and vision | Planned; commands return an explicit unavailable message |
+| On-demand Safari/display capture and vision boundary | Implemented; Screen Recording permission and explicit target selection required; analyzer is a mock |
 | Conversational AI and live dashboard integrations | Planned |
 | iPhone application | Planned; shared core and UI type-check for iOS 17+ |
 
@@ -47,7 +47,8 @@ swift run UltronVoicePreview
 - `Open https://example.com`
 - `Open File /absolute/path/to/document.pdf`
 - `Show Business`, `Show Markets`, `Show Projects`, `Show Today`
-- `Look at my screen` → explicit “not implemented” response; no capture occurs
+- `Look at my screen` → asks for Screen Recording permission and a display, then runs the development analyzer
+- `Analyze my dashboard` → asks for Screen Recording permission and a Safari window, then runs the development analyzer
 
 Application launching uses a small bundle-identifier allowlist. Missing or unsupported apps return a useful error. File opening permits ordinary folders, plain text, PDFs, and common image formats; packages, executable files, and special files are rejected. Stop cancels pending coordination and speech, but cannot undo a launch already accepted by macOS.
 
@@ -55,7 +56,7 @@ The menu bar uses the same session as the dashboard. It offers Open ULTRON, Open
 
 ## Configuration and privacy
 
-Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; it does not rebuild or replace it. Safari handles your existing login session. On-demand analysis is planned and is not active yet. The UI does not expose nonfunctional neural style/processing controls.
+Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; it does not rebuild or replace it. Safari handles your existing login session. Analysis is explicit and currently uses a development mock analyzer. The UI does not expose nonfunctional neural style/processing controls.
 
 No microphone, speech-recognition, screen-recording, or Accessibility permission is requested. No cloud AI, analytics, background capture, or command-text logging is implemented. The conversation is in memory and limited to 40 entries. Web links explicitly open in Safari, regardless of the system default browser, and use Safari's network and existing account session.
 

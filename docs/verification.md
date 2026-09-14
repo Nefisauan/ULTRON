@@ -19,7 +19,7 @@
 - `Open TradeScale` without configuration showed an actionable Settings error.
 - Settings rejected a file URL, saved `https://example.com`, and the configured dashboard command returned success after the native browser-opening request. No real TradeScale account was used or verified.
 - Temporary example URL was cleared and saved after the test.
-- `Look at my screen` explicitly reported not implemented, without any app capture/permission request.
+- Vision boundary tests cover denied permission, cancellation, one-frame capture ownership, analyzer isolation, Safari-window intent routing, and empty-frame rejection. Live permission/capture should be tested on the user's Mac because this environment has no reason to grant Screen Recording automatically.
 - The final packaged app was relaunched successfully. Dashboard accessibility labels were checked after removing repeated child labels.
 
 ## Still pending
@@ -27,7 +27,7 @@
 - Audible voice identity/quality judgment, headphones/output-route checks, and interruption timing under load.
 - Native Safari/Xcode and file-opening smoke tests; menu-bar-extra interaction; persisted voice-setting restart tests.
 - Performance measurement and full accessibility review.
-- iPhone shell/simulator launch, screen capture and denied-permission flows, and the rest of Phase 1 acceptance.
+- iPhone shell/simulator launch, a live Screen Recording permission/capture run, actual dashboard interpretation, and the rest of Phase 1 acceptance.
 
 ## Restricted-environment commands
 

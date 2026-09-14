@@ -4,6 +4,7 @@ import UltronCore
 @MainActor
 final class MacSession: ObservableObject {
     let preferences = LocalPreferences()
+    let permissions = MacPermissionService()
     let synthesizer = AppleSpeechSynthesizer()
     let voice: VoiceController
     let commands: CommandController
@@ -21,6 +22,7 @@ final class MacSession: ObservableObject {
             try registry.register(OpenURLTool(opener: system))
             try registry.register(OpenFileTool(opener: system))
             try registry.register(ShowDashboardModuleTool())
+            try registry.register(CaptureScreenTool(permissions: permissions, capturer: MacScreenCapturer(), analyzer: MockVisionAnalyzer()))
         } catch {
             setupError = "Tool registration failed. Restart ULTRON."
         }

@@ -8,7 +8,9 @@ public struct CommandParser: Sendable {
         "show business": .showModule(.business), "show markets": .showModule(.markets),
         "show projects": .showModule(.projects), "show today": .showModule(.today),
         "look at my screen": .captureScreen, "look at this": .captureScreen,
-        "what are we seeing": .captureScreen
+        "what are we seeing": .captureScreen, "analyze this": .captureScreen,
+        "analyze dashboard": .analyzeDashboard, "analyze my dashboard": .analyzeDashboard,
+        "analyze my business dashboard": .analyzeDashboard, "analyze tradescale": .analyzeDashboard
     ]
 
     public init() {}

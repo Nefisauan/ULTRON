@@ -21,7 +21,12 @@ public struct UltronToolDescriptor: Equatable, Sendable {
 
 public struct UltronToolContext: Sendable {
     public let dashboard: BusinessDashboardConfiguration
-    public init(dashboard: BusinessDashboardConfiguration) { self.dashboard = dashboard }
+    public let onProgress: (@MainActor @Sendable (UltronActivity) -> Void)?
+    public init(dashboard: BusinessDashboardConfiguration,
+                onProgress: (@MainActor @Sendable (UltronActivity) -> Void)? = nil) {
+        self.dashboard = dashboard
+        self.onProgress = onProgress
+    }
 }
 
 public struct UltronToolResult: Equatable, Sendable {
