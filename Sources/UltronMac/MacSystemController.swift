@@ -23,7 +23,12 @@ final class MacSystemController: ApplicationController, ResourceOpener {
     func openURL(_ url: URL) async throws {
         try Task.checkCancellation()
         let validated = try BusinessDashboardConfiguration.validate(url.absoluteString)
-        guard NSWorkspace.shared.open(validated) else { throw CommandError.launchFailed }
+        guard let safari = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.Safari") else {
+            throw CommandError.applicationNotFound("Safari")
+        }
+        do {
+            _ = try await NSWorkspace.shared.open([validated], withApplicationAt: safari, configuration: .init())
+        } catch { throw CommandError.launchFailed }
     }
 
     func openFile(_ url: URL) async throws {

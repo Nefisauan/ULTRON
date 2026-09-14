@@ -43,7 +43,7 @@ swift run UltronVoicePreview
 
 - `Hey Ultron` → “Yes?” (typed greeting; no wake-word listener)
 - `Open Safari`, `Open Xcode`, `Open Calculator`
-- `Open TradeScale` → opens the URL configured in Settings
+- `Open TradeScale` → opens your existing dashboard in Safari using the URL configured in Settings
 - `Open https://example.com`
 - `Open File /absolute/path/to/document.pdf`
 - `Show Business`, `Show Markets`, `Show Projects`, `Show Today`
@@ -55,9 +55,9 @@ The menu bar uses the same session as the dashboard. It offers Open ULTRON, Open
 
 ## Configuration and privacy
 
-Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. No TradeScale account is connected. The UI does not expose nonfunctional neural style/processing controls.
+Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; it does not rebuild or replace it. Safari handles your existing login session. On-demand analysis is planned and is not active yet. The UI does not expose nonfunctional neural style/processing controls.
 
-No microphone, speech-recognition, screen-recording, or Accessibility permission is requested. No cloud AI, analytics, background capture, or command-text logging is implemented. The conversation is in memory and limited to 40 entries. Links opened in the browser naturally use the browser's network and existing account session.
+No microphone, speech-recognition, screen-recording, or Accessibility permission is requested. No cloud AI, analytics, background capture, or command-text logging is implemented. The conversation is in memory and limited to 40 entries. Web links explicitly open in Safari, regardless of the system default browser, and use Safari's network and existing account session.
 
 ## Architecture and tree
 

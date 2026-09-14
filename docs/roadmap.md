@@ -7,7 +7,7 @@
 
 ## Next Phase 1 work
 
-1. On-demand screen pipeline: centralized permissions, ScreenContext, one-frame native capture, MockVisionAnalyzer, denied-permission tests. No continuous capture or cloud upload.
+1. Analyze the existing business dashboard in Safari when explicitly requested; do not rebuild it. On-demand screen pipeline: centralized permissions, ScreenContext, one-frame native capture, MockVisionAnalyzer, denied-permission tests. No continuous capture or cloud upload.
 2. iPhone shell and Xcode project/workspace: shared UI, text interface, settings, explicit unconfigured Mac connection, simulator build/run verification.
 3. Provider-independent mock AI, short-term memory, refined business/market models, and richer developer diagnostics.
 4. Complete platform smoke tests, voice audition, accessibility/performance checks, and the full Phase 1 acceptance checklist before declaring the foundation complete.

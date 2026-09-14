@@ -11,7 +11,7 @@ struct UltronSettingsView: View {
         Form {
             Section("Business") {
                 TextField("TradeScale URL", text: $dashboardURL, prompt: Text("https://your-dashboard.example"))
-                Text("Stored on this Mac. Use a non-sensitive URL without credentials or access tokens.")
+                Text("Your existing dashboard opens in Safari. Stored on this Mac; omit credentials and access tokens.")
                     .font(.caption).foregroundStyle(.secondary)
                 Button("Save dashboard URL") {
                     do {

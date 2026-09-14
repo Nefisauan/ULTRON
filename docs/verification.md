@@ -39,3 +39,7 @@ ULTRON_BUILD_DIR=/tmp/ultron-voice-build ULTRON_DISABLE_BUILD_SANDBOX=1 ./Script
 ```
 
 On a normal development machine, use `swift test` and `./Scripts/build-macos.sh`. The build-sandbox override is for the build process only and does not change macOS app permissions.
+
+## Safari preference follow-up
+
+Web opening now targets Safari explicitly using its bundle identifier. The updated macOS build and all 19 tests pass. The user's existing dashboard URL was saved only in local preferences and verified after app restart; it is not included in repository files. The dashboard itself was not inspected or analyzed during this configuration change. The Safari-specific opening path has compiled but has not received a separate live navigation test.

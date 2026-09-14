@@ -25,7 +25,7 @@ public struct OpenApplicationTool: UltronTool {
 
 @MainActor
 public struct OpenURLTool: UltronTool {
-    public let descriptor = UltronToolDescriptor(identifier: "open-url", description: "Open an HTTP or HTTPS address in the default browser.", inputRequirements: "Web URL or configured dashboard", risk: .lowRisk)
+    public let descriptor = UltronToolDescriptor(identifier: "open-url", description: "Open an HTTP or HTTPS address in the configured browser.", inputRequirements: "Web URL or configured dashboard", risk: .lowRisk)
     private let opener: any ResourceOpener
     public init(opener: any ResourceOpener) { self.opener = opener }
     public func execute(_ intent: UltronIntent, context: UltronToolContext) async throws -> UltronToolResult {

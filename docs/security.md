@@ -4,7 +4,7 @@
 
 Typed text stays in an in-memory conversation limited to 40 entries. A deterministic parser selects vetted local tools. Successful response text may be sent to Apple's installed system voice for playback. The program has no AI/cloud client, analytics, microphone recording, screen capture, or audio-file retention. The system manages its own voice resources.
 
-Commands are never evaluated as shell or AppleScript. Applications resolve through a short allowlist of known bundle identifiers. URL tools accept only HTTP/HTTPS addresses with a host and no embedded credentials; arbitrary application URL schemes are rejected. Opening a URL hands it to the user's browser and may use that browser's existing authenticated session. No credentials are handled by ULTRON.
+Commands are never evaluated as shell or AppleScript. Applications resolve through a short allowlist of known bundle identifiers. URL tools accept only HTTP/HTTPS addresses with a host and no embedded credentials; arbitrary application URL schemes are rejected. Opening a URL explicitly hands it to Safari and may use Safari's existing authenticated session. No credentials are handled by ULTRON.
 
 File paths must be explicit. Native file opening resolves symbolic links and permits ordinary folders and a small set of non-executable regular document/image types. Application packages, executable files, and special files are rejected. This is a conservative development policy, not a replacement for OS access controls or safe document handling by the destination app.
 
