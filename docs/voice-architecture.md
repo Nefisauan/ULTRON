@@ -6,9 +6,9 @@ Target a deep adult male voice with calm authority, intelligence, restrained con
 
 The app injects a `SpeechSynthesizer` into `VoiceController`. Future command and AI coordinators deliver final response text to `speak`. Voice direction does not rewrite content: concision and dry personality belong in future response generation. Never speak a success response before a tool actually succeeds.
 
-Native delegate events are forwarded to the main actor. Start enters speaking, word boundaries pulse the core, and completion or cancellation returns to idle. A request token prevents superseded callbacks from corrupting state. Commands call `transition(to:)` to cancel speech before listening, seeing, thinking, or acting. Empty input produces a useful error. The controller is the preview's single state source; the full command state machine remains future work.
+Native delegate events are forwarded to the main actor. Start enters speaking, word boundaries pulse the core, and completion or cancellation returns to idle. A request token prevents superseded callbacks from corrupting state. Commands call `transition(to:)` to cancel speech before listening, seeing, thinking, or acting. Empty input produces a useful error. The voice controller and command coordinator share an operation-aware UltronStateMachine. Both the dashboard and menu bar use the same application session.
 
-The preview uses a decaying word-boundary envelope, not audio amplitude. Its timeline pauses outside speaking or while inactive, and respects Reduce Motion. Native audible timing still needs hardware review. AVSpeechSynthesizer's direct playback has no measured PCM level in this implementation.
+The reusable core in the dashboard and voice lab uses a decaying word-boundary envelope, not audio amplitude. Its timeline runs at a reduced 15 Hz while idle, uses 30 Hz for activity, pauses while inactive or in error, and respects Reduce Motion. Native speaking/idle transitions were observed in the live UI; perceived timing and voice quality still need an audible review. AVSpeechSynthesizer's direct playback has no measured PCM level in this implementation.
 
 ## Neural provider replacement
 
@@ -18,4 +18,4 @@ For supported providers, translate profile style and processing into actual synt
 
 ## Future interaction
 
-Local wake word → listening → recognized command → acting → verified tool result → spoken response. Explicit screen requests enter seeing, then thinking, then speak the analysis. Wake-word detection, microphone capture, tools, and vision are not implemented in this voice milestone.
+Local wake word → listening → recognized command → acting → verified tool result → spoken response. Explicit screen requests enter seeing, then thinking, then speak the analysis. Typed commands and safe local opening tools are implemented. Wake-word detection, microphone capture, and vision remain planned.

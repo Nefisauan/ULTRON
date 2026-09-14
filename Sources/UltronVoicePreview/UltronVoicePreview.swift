@@ -1,5 +1,6 @@
 import SwiftUI
 import UltronCore
+import UltronUI
 
 @main
 struct UltronVoicePreview: App {
@@ -14,8 +15,6 @@ struct VoicePreview: View {
     @StateObject private var controller: VoiceController
     @State private var profile = UltronVoiceProfile.ultron
     @State private var text = "Yes? Systems are ready."
-    @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init() {
         let synthesizer = AppleSpeechSynthesizer()
@@ -27,20 +26,8 @@ struct VoicePreview: View {
         VStack(spacing: 22) {
             Text("U L T R O N").font(.title).tracking(7)
             Text("VOICE LAB · APPLE NATIVE").font(.caption).foregroundStyle(.secondary)
-            TimelineView(.animation(minimumInterval: 1 / 30,
-                                    paused: controller.state != .speaking || scenePhase != .active || reduceMotion)) { context in
-                let elapsed = context.date.timeIntervalSince(controller.lastWordAt)
-                let energy = controller.state == .speaking ? max(controller.speechIntensity, max(0, 1 - elapsed * 3)) : 0
-                ZStack {
-                    ForEach(0..<4) { index in
-                        Circle().stroke(.cyan.opacity(0.2 + Double(index) * 0.15), lineWidth: index == 3 ? 3 : 1)
-                            .frame(width: CGFloat(110 + index * 32), height: CGFloat(110 + index * 32))
-                            .scaleEffect(reduceMotion ? 1 : 1 + energy * 0.06)
-                    }
-                    Circle().fill(.cyan.opacity(0.25 + energy * 0.4)).frame(width: 80, height: 80)
-                        .blur(radius: 12)
-                }.frame(height: 235)
-            }
+            UltronCoreView(state: controller.state, speechIntensity: controller.speechIntensity,
+                           lastWordAt: controller.lastWordAt)
             Text(controller.state.rawValue.uppercased()).font(.caption.monospaced()).foregroundStyle(.cyan)
             TextField("Preview text", text: $text).textFieldStyle(.roundedBorder)
             Picker("Voice", selection: $profile.voiceIdentifier) {

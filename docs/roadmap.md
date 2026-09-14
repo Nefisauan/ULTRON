@@ -1,9 +1,19 @@
 # Next milestones
 
-1. Audition installed voices, verify start/stop/replace behavior on speakers and headphones, and refine original vocal direction.
-2. Integrate this package with the Phase 1 macOS command coordinator and iPhone shell; add persistent preferences and platform interruption handling.
-3. With approval, implement push-to-talk and speech recognition; keep microphone consent separate from synthesis.
-4. Evaluate licensed neural voices, then add a provider adapter and measured playback levels. Implement optional output processing only with actual DSP support.
-5. Add optional local wake-word detection after command and voice pipelines are reliable.
+## Completed foundation milestones
 
-The broader Phase 1 dashboard, tool framework, vision pipeline, and companion app remain unbuilt. This milestone does not declare Phase 1 complete or begin Phase 2.
+1. Provider-independent native speech, original voice profile, voice laboratory, lifecycle tests.
+2. Shared command/state foundation, safe-tool registry, macOS command dashboard, reusable animated core, sample dashboard provider, menu bar, and persistent settings.
+
+## Next Phase 1 work
+
+1. On-demand screen pipeline: centralized permissions, ScreenContext, one-frame native capture, MockVisionAnalyzer, denied-permission tests. No continuous capture or cloud upload.
+2. iPhone shell and Xcode project/workspace: shared UI, text interface, settings, explicit unconfigured Mac connection, simulator build/run verification.
+3. Provider-independent mock AI, short-term memory, refined business/market models, and richer developer diagnostics.
+4. Complete platform smoke tests, voice audition, accessibility/performance checks, and the full Phase 1 acceptance checklist before declaring the foundation complete.
+
+## Later, only with approval
+
+Phase 2: conversational AI, push-to-talk/recognition, streaming, and tool calling. Evaluate a licensed neural TTS adapter and measured playback levels. Implement optional metallic processing only with actual DSP support.
+
+Later phases retain the original brief's sequence: advanced Mac control; business intelligence; market intelligence; authenticated iPhone–Mac communication; contextual memory; optional local wake word/clap; multi-step workflows; user-controlled proactive intelligence.
