@@ -1,6 +1,6 @@
 # ULTRON
 
-A native personal AI operating layer for macOS and, eventually, iPhone. The current Phase 1 milestone is a local macOS command dashboard with an original animated core and provider-independent speech output. It is not yet a conversational AI agent.
+A native macOS assistant with an iPhone companion, an original animated core, provider-independent speech, and explicit command tools. It is not yet a general conversational AI agent.
 
 ## Current status
 
@@ -8,7 +8,7 @@ A native personal AI operating layer for macOS and, eventually, iPhone. The curr
 | --- | --- |
 | macOS dashboard, animated core, typed command input | Working; live UI checked |
 | Application state machine and tool registry | Working; tested |
-| Open Safari, Xcode, Calculator | Implemented; Calculator live-tested |
+| Open installed apps by exact name or bundle identifier | Implemented; ambiguous names rejected |
 | Configurable TradeScale shortcut and HTTP/HTTPS opening | Working; tested with a temporary example URL |
 | Show Business, Markets, Projects, Today | Working; all data explicitly sample |
 | Local document/folder opening | Implemented; policy unit-tested, native opening not live-tested |
@@ -16,14 +16,15 @@ A native personal AI operating layer for macOS and, eventually, iPhone. The curr
 | Menu bar actions | Implemented; dedicated status-menu interaction pending |
 | Persistent voice preferences and dashboard URL | Implemented; URL save/clear live-tested |
 | On-device English dictation with review before sending | Implemented; live permission/audio test pending |
-| Neural style, metallic processing, wake word | Planned |
+| Optional Hey Ultron session | Implemented; live audio acceptance pending |
+| Neural style and metallic processing | Planned |
 | On-demand Safari/display capture and vision boundary | Implemented; Screen Recording permission and explicit target selection required; analyzer is a mock |
 | Direct Safari page reading | Implemented; reads rendered dashboard text/tables on explicit request |
 | Dashboard text analysis | Apple on-device model when available (macOS 26+); exact excerpt and Copy for ChatGPT otherwise |
 | Dashboard backend API and general conversational AI | Planned |
-| iPhone application | Planned; shared core and UI type-check for iOS 17+ |
+| iPhone application and encrypted Mac link | Simulator UI/greeting verified; TLS channel tested on loopback; device-to-device acceptance pending |
 
-Phase 1 is **not complete**. Dashboard reading has a bounded local analysis provider. No paid cloud API is configured. On-device microphone dictation is explicitly user-started; wake-word activation remains planned.
+Phase 1 is **not complete**. No paid cloud API is configured. See [access and voice controls](docs/access-and-voice.md) for installed-app opening, explicit website analysis, optional hands-free sessions, iPhone build instructions, and remaining limits.
 
 ## Run on macOS
 
@@ -34,7 +35,7 @@ Requires macOS 14+ and Xcode 26+ with Swift 6 to build. On-device AI needs macOS
 open .build/app/ULTRON.app
 ```
 
-This produces an ad-hoc-signed development app. Developer ID distribution, notarization, a production icon, and an Xcode iPhone project remain future work. Alternatively, open `Package.swift` in Xcode, select the `UltronMac` executable and My Mac, and Run.
+This produces an ad-hoc-signed development app. Developer ID distribution, notarization, and a production icon remain future work. Alternatively, open `Package.swift` in Xcode, select `UltronMac` and My Mac, and Run. For iPhone, open `ULTRON.xcodeproj` and run the `UltronPhone` scheme on a simulator.
 
 The independent voice laboratory remains available:
 
@@ -44,8 +45,10 @@ swift run UltronVoicePreview
 
 ## Commands
 
-- `Hey Ultron` → “Yes?” (typed greeting; no wake-word listener)
+- `Hey Ultron` → “Yes?” (typed or during an enabled hands-free session)
 - `Open Safari`, `Open Xcode`, `Open Calculator`
+- `Open Notes`, `Open Slack`, or another installed application's exact name
+- `Analyze https://example.com` → read the matching active Safari site's text
 - `Open TradeScale` → opens your existing dashboard in Safari using the URL configured in Settings
 - `Open https://example.com`
 - `Open File /absolute/path/to/document.pdf`
@@ -95,6 +98,6 @@ See [architecture](docs/architecture.md), [security](docs/security.md), [permiss
 swift test
 ```
 
-The 34 tests cover commands, state/risk boundaries, speech, capture, Safari scope checks, cancellation, and page extraction. Native WebKit fixture tests verify hidden/form exclusions and table extraction without opening your dashboard. They need a macOS session able to launch WebKit's helper processes; a restrictive command sandbox may block them.
+The 41 tests cover commands, state/risk boundaries, speech, wake-phrase matching, capture, Safari scope checks, source-verified observations, and encrypted-channel authentication/cancellation. Native WebKit fixtures verify hidden/form/control/chart-label exclusions and table extraction without opening your dashboard. Native fixture and loopback tests need a macOS session able to run their helpers; a restrictive command sandbox may block them.
 
 Screenshots: the dashboard has been visually inspected; repository screenshots will be added after the visual identity is refined.

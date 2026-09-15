@@ -7,15 +7,18 @@ let package = Package(
     products: [
         .library(name: "UltronCore", targets: ["UltronCore"]),
         .library(name: "UltronUI", targets: ["UltronUI"]),
+        .library(name: "UltronLink", targets: ["UltronLink"]),
         .executable(name: "UltronVoicePreview", targets: ["UltronVoicePreview"]),
         .executable(name: "UltronMac", targets: ["UltronMac"])
     ],
     targets: [
         .target(name: "UltronCore"),
         .target(name: "UltronUI", dependencies: ["UltronCore"]),
+        .target(name: "UltronLink"),
         .executableTarget(name: "UltronVoicePreview", dependencies: ["UltronCore", "UltronUI"]),
-        .executableTarget(name: "UltronMac", dependencies: ["UltronCore", "UltronUI"]),
-        .testTarget(name: "UltronCoreTests", dependencies: ["UltronCore"])
+        .executableTarget(name: "UltronMac", dependencies: ["UltronCore", "UltronUI", "UltronLink"]),
+        .testTarget(name: "UltronCoreTests", dependencies: ["UltronCore"]),
+        .testTarget(name: "UltronLinkTests", dependencies: ["UltronLink"])
     ],
     swiftLanguageModes: [.v6]
 )

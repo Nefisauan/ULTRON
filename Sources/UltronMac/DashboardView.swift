@@ -1,24 +1,30 @@
 import SwiftUI
 import UltronCore
 import UltronUI
+import UltronLink
 
 struct DashboardView: View {
     @ObservedObject var session: MacSession
     @ObservedObject private var commands: CommandController
     @ObservedObject private var voice: VoiceController
     @ObservedObject private var speechInput: MacSpeechInput
+    @ObservedObject private var wakeListener: MacWakeListener
+    @ObservedObject private var link: SecureLink
     @Environment(\.scenePhase) private var scenePhase
     @State private var listeningOperation: UUID?
     @ObservedObject private var stateMachine: UltronStateMachine
     @State private var input = ""
     @State private var showDeveloper = false
     @State private var showPageReview = false
+    @State private var showPairing = false
 
     init(session: MacSession) {
         self.session = session
         commands = session.commands
         voice = session.voice
         speechInput = session.speechInput
+        wakeListener = session.wakeListener
+        link = session.link
         stateMachine = session.voice.stateMachine
     }
 
@@ -77,6 +83,7 @@ struct DashboardView: View {
             if let page = commands.lastResult?.pageSnapshot { DashboardPageReview(page: page) }
             else { Text("This reading has been cleared. Read the dashboard again.").padding() }
         }
+        .sheet(isPresented: $showPairing) { MacPairingView(link: session.link) }
     }
 
     private var header: some View {
@@ -86,7 +93,8 @@ struct DashboardView: View {
                 Text("PERSONAL OPERATING LAYER").font(.system(size: 9, design: .monospaced)).tracking(2).foregroundStyle(.secondary)
             }
             Spacer()
-            Label("LOCAL", systemImage: "circle.fill").font(.caption2.monospaced()).foregroundStyle(.cyan)
+            Label(link.isHosting ? "HOSTING" : "LOCAL", systemImage: "circle.fill").font(.caption2.monospaced()).foregroundStyle(.cyan)
+            Button { showPairing = true } label: { Image(systemName: "iphone") }.help("Connect iPhone")
             Button { showDeveloper.toggle() } label: { Image(systemName: "terminal") }.help("Developer details")
             SettingsLink { Image(systemName: "slider.horizontal.3") }.help("Settings")
         }.buttonStyle(.plain).padding(.horizontal, 30).padding(.vertical, 24)
@@ -164,19 +172,24 @@ struct DashboardView: View {
                 TextField("Give ULTRON a command…", text: $input).textFieldStyle(.plain).onSubmit(submit)
                     .accessibilityLabel("Command")
                 Button {
+                    wakeListener.stop()
                     if speechInput.isActive { speechInput.stop() }
                     else { speechInput.start() }
                 } label: { Image(systemName: speechInput.isActive ? "mic.fill" : "mic") }
                     .foregroundStyle(speechInput.isActive ? .orange : .cyan)
                     .accessibilityLabel(speechInput.isActive ? "Finish dictation" : "Dictate command")
                     .help("On-device English dictation. Review the text before sending.")
-                Button("Stop") { speechInput.stop(); commands.stop() }.keyboardShortcut(.escape, modifiers: [])
+                Button("Stop") { link.disconnect(); wakeListener.stop(); speechInput.stop(); commands.stop() }.keyboardShortcut(.escape, modifiers: [])
                 Button { submit() } label: { Image(systemName: "arrow.up") }
                     .buttonStyle(.borderedProminent).tint(.cyan).disabled(input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .accessibilityLabel("Run command")
             }.padding(15).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
             if !speechInput.status.isEmpty {
                 Text(speechInput.status).font(.caption).foregroundStyle(speechInput.isActive ? .cyan : .secondary)
+            }
+            HStack {
+                Button(wakeListener.isEnabled ? "Disable Hey Ultron" : "Enable Hey Ultron") { session.toggleHandsFree() }
+                Text(wakeListener.status).font(.caption2).foregroundStyle(wakeListener.isEnabled ? .cyan : .secondary)
             }
             Text("Open TradeScale · Analyze my dashboard · Show Business / Markets / Projects / Today")
                 .font(.caption2).foregroundStyle(.secondary)

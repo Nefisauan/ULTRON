@@ -23,6 +23,11 @@ private final class FixturePageAnalyzer: DashboardTextAnalyzer {
 }
 
 final class DashboardReadingTests: XCTestCase {
+    func testGeneratedEvidenceMustMatchSource() {
+        let source = "0\nTotal leads\n$0\nPipeline value"
+        XCTAssertEqual(DashboardEvidence.verified(["0 Total leads", "All time: 0 leads", "$0 Pipeline value", "0 Total leads", "0"], in: source),
+                       ["0 Total leads", "$0 Pipeline value"])
+    }
     func testSameOriginAndSanitizedURLs() throws {
         let configured = URL(string: "https://example.com")!
         try DashboardPageScope.validate(URL(string: "https://EXAMPLE.com:443/reports?a=b")!, against: configured)
@@ -84,6 +89,19 @@ final class DashboardReadingTests: XCTestCase {
         do { _ = try await tool.execute(.analyzeDashboard, context: .init(dashboard: try .init(urlString: "https://example.com"))); XCTFail() }
         catch { XCTAssertEqual(error as? CommandError, .wrongSafariPage) }
         XCTAssertEqual(analyzer.calls, 0)
+    }
+
+    @MainActor
+    func testExplicitSiteDoesNotBroadenSavedDashboardScope() async throws {
+        let reader = FixturePageReader()
+        let analyzer = FixturePageAnalyzer()
+        let tool = ReadDashboardTool(reader: reader, analyzer: analyzer)
+        let context = UltronToolContext(dashboard: try .init(urlString: "https://saved.example"))
+        _ = try await tool.execute(.analyzePage(URL(string: "https://example.com")!), context: context)
+        XCTAssertEqual(analyzer.calls, 1)
+        do { _ = try await tool.execute(.analyzeDashboard, context: context); XCTFail() }
+        catch { XCTAssertEqual(error as? CommandError, .wrongSafariPage) }
+        XCTAssertEqual(analyzer.calls, 1)
     }
 
     @MainActor

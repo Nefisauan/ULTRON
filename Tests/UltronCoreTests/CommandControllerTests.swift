@@ -29,6 +29,20 @@ private final class DelayedApplicationController: ApplicationController {
 
 final class CommandControllerTests: XCTestCase {
     @MainActor
+    func testRemoteExecutorIsExplicitAndNeverFallsBackToLocalOnFailure() async throws {
+        let speech = RecordingSpeech()
+        let controller = CommandController(voice: VoiceController(synthesizer: speech), registry: UltronToolRegistry())
+        controller.remoteExecutor = { _ in "Remote response" }
+        await controller.submit("Hey Ultron", context: .init(dashboard: .init()), speakResponses: false).value
+        XCTAssertEqual(controller.lastResult?.message, "Remote response")
+        controller.remoteExecutor = { _ in throw CommandError.launchFailed }
+        await controller.submit("Hey Ultron", context: .init(dashboard: .init()), speakResponses: false).value
+        XCTAssertNil(controller.lastResult)
+        XCTAssertEqual(controller.stateMachine.state, .error)
+        XCTAssertFalse(controller.conversation.contains { $0.text == "Yes?" })
+    }
+
+    @MainActor
     func testSuccessfulActionSpeaksOnlyAfterToolReturns() async throws {
         let system = DelayedApplicationController()
         let speech = RecordingSpeech()

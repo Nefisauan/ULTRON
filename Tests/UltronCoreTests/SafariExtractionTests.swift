@@ -33,6 +33,8 @@ final class SafariExtractionTests: XCTestCase {
         <textarea>TEXTAREA_SECRET</textarea><input type="password" value="PASSWORD_SECRET">
         <div contenteditable="true">EDITABLE_SECRET</div><span aria-hidden="true">ARIA_SECRET</span>
         <div data-private>PRIVATE_SECRET</div><table><tr><th>Meetings</th><td>12</td></tr></table>
+        <button>FILTER_OPTION</button><nav>NAVIGATION_LABEL</nav>
+        <svg><text x="0" y="20">CHART_AXIS</text></svg>
         <canvas></canvas></body></html>
         """, baseURL: nil)
         await fulfillment(of: [loaded], timeout: 15)
@@ -44,6 +46,7 @@ final class SafariExtractionTests: XCTestCase {
         let text = try XCTUnwrap(object["text"] as? String)
         XCTAssertTrue(text.contains("Leads: 128"))
         XCTAssertFalse(text.contains("SECRET"))
+        for label in ["FILTER_OPTION", "NAVIGATION_LABEL", "CHART_AXIS"] { XCTAssertFalse(text.contains(label)) }
         XCTAssertEqual(object["tables"] as? [[[String]]], [[["Meetings", "12"]]])
         XCTAssertEqual(object["hasVisualContent"] as? Bool, true)
         let mismatchResult = try await view.evaluateJavaScript(SafariPageExtraction.javascript(expectedOrigin: "https://different.test"))

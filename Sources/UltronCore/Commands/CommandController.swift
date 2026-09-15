@@ -19,6 +19,7 @@ public final class CommandController: ObservableObject {
     @Published public private(set) var lastResult: UltronToolResult?
     public let voice: VoiceController
     public let registry: UltronToolRegistry
+    public var remoteExecutor: (@MainActor @Sendable (String) async throws -> String)?
     public var stateMachine: UltronStateMachine { voice.stateMachine }
     private let parser = CommandParser()
     private var task: Task<Void, Never>?
@@ -41,15 +42,18 @@ public final class CommandController: ObservableObject {
         isExecuting = true
         append(.user, text)
         logger.info("Command started") // Never log command text, URLs, or file paths.
+        let remoteExecutor = self.remoteExecutor
         let next = Task { [weak self] in
             guard let self else { return }
             do {
                 try Task.checkCancellation()
-                let intent = try parser.parse(command.text)
                 let result: UltronToolResult
-                if intent == .greet {
+                if let remoteExecutor {
+                    result = .init(message: try await remoteExecutor(command.text))
+                } else if try parser.parse(command.text) == .greet {
                     result = .init(message: "Yes?")
                 } else {
+                    let intent = try parser.parse(command.text)
                     let isReading = intent.toolIdentifier == "capture-screen" || intent.toolIdentifier == "read-dashboard"
                     stateMachine.transition(to: isReading ? .seeing : .acting, for: operation)
                     let toolContext = UltronToolContext(dashboard: context.dashboard) { [weak self] activity in

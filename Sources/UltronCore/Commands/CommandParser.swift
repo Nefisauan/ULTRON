@@ -24,6 +24,10 @@ public struct CommandParser: Sendable {
         let normalized = trimmed.split(whereSeparator: \.isWhitespace).joined(separator: " ")
         let key = normalized.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: ".?!"))
         if let intent = Self.exact[key] { return intent }
+        for prefix in ["analyze ", "read page "] where normalized.lowercased().hasPrefix(prefix) {
+            let target = String(normalized.dropFirst(prefix.count))
+            return .analyzePage(try BusinessDashboardConfiguration.validate(target))
+        }
         // Preserve spaces and case within user paths and URLs.
         if trimmed.lowercased().hasPrefix("open file ") {
             let path = String(trimmed.dropFirst(10)).trimmingCharacters(in: .whitespacesAndNewlines)
@@ -36,7 +40,7 @@ public struct CommandParser: Sendable {
             guard !target.contains("/"), !target.contains("\\"), !target.contains(";") else {
                 throw CommandError.unsupported
             }
-            return .openApplication(target)
+            return .openApplication(target.trimmingCharacters(in: CharacterSet(charactersIn: ".?!")))
         }
         throw CommandError.unsupported
     }

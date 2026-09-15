@@ -1,0 +1,175 @@
+// !$*UTF8*$!
+{
+"archiveVersion" = 1;
+"classes" = {
+
+};
+"objectVersion" = 56;
+"objects" = {
+"PHONE_SOURCE" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Apps/iOS/UltronPhoneApp.swift";
+"sourceTree" = "<group>";
+};
+"PHONE_PRODUCT" = {
+"isa" = "PBXFileReference";
+"explicitFileType" = "wrapper.application";
+"path" = "ULTRON.app";
+"sourceTree" = "BUILT_PRODUCTS_DIR";
+};
+"MAIN_GROUP" = {
+"isa" = "PBXGroup";
+"children" = ("PHONE_SOURCE", "PRODUCT_GROUP");
+"sourceTree" = "<group>";
+};
+"PRODUCT_GROUP" = {
+"isa" = "PBXGroup";
+"children" = ("PHONE_PRODUCT");
+"name" = "Products";
+"sourceTree" = "<group>";
+};
+"SOURCE_BUILD" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "PHONE_SOURCE";
+};
+"SOURCES" = {
+"isa" = "PBXSourcesBuildPhase";
+"buildActionMask" = 2147483647;
+"files" = ("SOURCE_BUILD");
+"runOnlyForDeploymentPostprocessing" = 0;
+};
+"FRAMEWORKS" = {
+"isa" = "PBXFrameworksBuildPhase";
+"buildActionMask" = 2147483647;
+"files" = ("CORE_BUILD", "UI_BUILD", "LINK_BUILD");
+"runOnlyForDeploymentPostprocessing" = 0;
+};
+"LOCAL_PACKAGE" = {
+"isa" = "XCLocalSwiftPackageReference";
+"relativePath" = ".";
+};
+"CORE" = {
+"isa" = "XCSwiftPackageProductDependency";
+"productName" = "UltronCore";
+};
+"CORE_BUILD" = {
+"isa" = "PBXBuildFile";
+"productRef" = "CORE";
+};
+"UI" = {
+"isa" = "XCSwiftPackageProductDependency";
+"productName" = "UltronUI";
+};
+"UI_BUILD" = {
+"isa" = "PBXBuildFile";
+"productRef" = "UI";
+};
+"LINK" = {
+"isa" = "XCSwiftPackageProductDependency";
+"productName" = "UltronLink";
+};
+"LINK_BUILD" = {
+"isa" = "PBXBuildFile";
+"productRef" = "LINK";
+};
+"PROJECT_Debug" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"SDKROOT" = "iphoneos";
+"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+"SWIFT_VERSION" = "6.0";
+"ALWAYS_SEARCH_USER_PATHS" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+};
+};
+"TARGET_Debug" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"PRODUCT_BUNDLE_IDENTIFIER" = "dev.ultron.phone";
+"PRODUCT_NAME" = "ULTRON";
+"GENERATE_INFOPLIST_FILE" = "YES";
+"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+"INFOPLIST_KEY_NSLocalNetworkUsageDescription" = "Connect to your Mac over an encrypted local connection only when you request pairing.";
+"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+"TARGETED_DEVICE_FAMILY" = "1,2";
+"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+"MARKETING_VERSION" = "0.6.0";
+"CURRENT_PROJECT_VERSION" = "6";
+"CODE_SIGN_STYLE" = "Automatic";
+};
+};
+"PROJECT_Release" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"SDKROOT" = "iphoneos";
+"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+"SWIFT_VERSION" = "6.0";
+"ALWAYS_SEARCH_USER_PATHS" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+};
+};
+"TARGET_Release" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"PRODUCT_BUNDLE_IDENTIFIER" = "dev.ultron.phone";
+"PRODUCT_NAME" = "ULTRON";
+"GENERATE_INFOPLIST_FILE" = "YES";
+"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+"INFOPLIST_KEY_NSLocalNetworkUsageDescription" = "Connect to your Mac over an encrypted local connection only when you request pairing.";
+"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+"TARGETED_DEVICE_FAMILY" = "1,2";
+"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+"MARKETING_VERSION" = "0.6.0";
+"CURRENT_PROJECT_VERSION" = "6";
+"CODE_SIGN_STYLE" = "Automatic";
+};
+};
+"PROJECT_CONFIG" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = ("PROJECT_Debug", "PROJECT_Release");
+"defaultConfigurationIsVisible" = 0;
+"defaultConfigurationName" = "Release";
+};
+"TARGET_CONFIG" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = ("TARGET_Debug", "TARGET_Release");
+"defaultConfigurationIsVisible" = 0;
+"defaultConfigurationName" = "Release";
+};
+"PHONE_TARGET" = {
+"isa" = "PBXNativeTarget";
+"buildConfigurationList" = "TARGET_CONFIG";
+"buildPhases" = ("SOURCES", "FRAMEWORKS");
+"buildRules" = ();
+"dependencies" = ();
+"name" = "UltronPhone";
+"packageProductDependencies" = ("CORE", "UI", "LINK");
+"productName" = "ULTRON";
+"productReference" = "PHONE_PRODUCT";
+"productType" = "com.apple.product-type.application";
+};
+"PROJECT" = {
+"isa" = "PBXProject";
+"attributes" = {
+"LastUpgradeCheck" = "2620";
+};
+"buildConfigurationList" = "PROJECT_CONFIG";
+"compatibilityVersion" = "Xcode 14.0";
+"developmentRegion" = "en";
+"hasScannedForEncodings" = 0;
+"knownRegions" = ("en", "Base");
+"mainGroup" = "MAIN_GROUP";
+"productRefGroup" = "PRODUCT_GROUP";
+"projectDirPath" = "";
+"projectRoot" = "";
+"packageReferences" = ("LOCAL_PACKAGE");
+"targets" = ("PHONE_TARGET");
+};
+};
+"rootObject" = "PROJECT";
+}

@@ -1,3 +1,5 @@
+import Foundation
+
 @MainActor
 public struct ReadDashboardTool: UltronTool {
     public let descriptor = UltronToolDescriptor(identifier: "read-dashboard", description: "Read rendered text and tables from the configured dashboard in Safari, then analyze locally when available.", inputRequirements: "Explicit dashboard analysis request; matching front Safari tab", risk: .readOnly)
@@ -10,8 +12,14 @@ public struct ReadDashboardTool: UltronTool {
     }
 
     public func execute(_ intent: UltronIntent, context: UltronToolContext) async throws -> UltronToolResult {
-        guard intent == .analyzeDashboard else { throw CommandError.invalidInput }
-        guard let url = context.dashboard.url else { throw CommandError.dashboardNotConfigured }
+        let url: Foundation.URL
+        switch intent {
+        case .analyzeDashboard:
+            guard let configured = context.dashboard.url else { throw CommandError.dashboardNotConfigured }
+            url = configured
+        case .analyzePage(let requested): url = try BusinessDashboardConfiguration.validate(requested.absoluteString)
+        default: throw CommandError.invalidInput
+        }
         try Task.checkCancellation()
         let page = try await reader.read(configuredURL: url)
         try Task.checkCancellation()

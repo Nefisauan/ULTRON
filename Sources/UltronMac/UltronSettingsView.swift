@@ -55,9 +55,9 @@ struct UltronSettingsView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("Privacy & devices") {
-                Text("Speech uses installed Apple voices. The microphone button starts on-device English dictation for up to 30 seconds. Review the recognized text before sending. No background listening or cloud AI is active. Screen capture occurs only when requested.")
-                Text("Mac ↔ iPhone connection: Not configured.")
-                Text("Live AI vision, live data integrations, and wake-word activation are planned.")
+                Text("Speech uses installed Apple voices. The microphone button starts on-device English dictation for review. Enable Hey Ultron starts an optional 10-minute hands-free session, including while the app is in the background. Wake commands execute through the same restricted tool registry. Stop ends both microphone modes. No cloud AI is configured.")
+                Text("Use the iPhone icon in the main window to start an encrypted local connection. Hosting is off by default.")
+                Text("Hands-free requires this app to be running. It cannot launch a closed app or wake a sleeping Mac. Clap activation and live AI vision are not implemented.")
                     .foregroundStyle(.secondary)
             }
         }.formStyle(.grouped).padding().frame(width: 620, height: 650)

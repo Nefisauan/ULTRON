@@ -67,7 +67,7 @@ public enum SafariPageExtraction {
     (() => {
       if (location.origin !== __EXPECTED_ORIGIN__) return JSON.stringify({error: 'wrongPage'});
       const deadline = Date.now() + 1500;
-      const blocked = 'script,style,noscript,template,input,textarea,select,[contenteditable],[hidden],[aria-hidden="true"],[data-private]';
+      const blocked = 'script,style,noscript,template,input,textarea,select,button,[role="button"],svg,canvas,nav,[role="navigation"],[contenteditable],[hidden],[aria-hidden="true"],[data-private]';
       const visible = el => {
         if (!el || el.closest(blocked)) return false;
         for (let p = el; p; p = p.parentElement) {

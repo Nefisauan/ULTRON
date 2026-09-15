@@ -14,6 +14,11 @@ final class CommandParserTests: XCTestCase {
     }
 
     func testPathsAndURLsPreserveCaseAndContent() throws {
+        XCTAssertEqual(try parser.parse("Analyze https://example.com/Reports"),
+                       .analyzePage(URL(string: "https://example.com/Reports")!))
+        XCTAssertThrowsError(try parser.parse("Analyze file:///etc/passwd"))
+        XCTAssertEqual(try parser.parse("Open Slack"), .openApplication("Slack"))
+        XCTAssertEqual(try parser.parse("Open Notes."), .openApplication("Notes"))
         XCTAssertEqual(try parser.parse("Open https://example.com/Account?tab=Leads"),
                        .openURL(URL(string: "https://example.com/Account?tab=Leads")!))
         XCTAssertEqual(try parser.parse("Open File /tmp/My  Notes.txt"),

@@ -21,6 +21,7 @@ public enum UltronIntent: Equatable, Sendable {
     case showModule(DashboardModuleID)
     case captureScreen
     case analyzeDashboard
+    case analyzePage(URL)
     case captureDashboard
 
     public var toolIdentifier: String? {
@@ -31,7 +32,7 @@ public enum UltronIntent: Equatable, Sendable {
         case .openFile: "open-file"
         case .showModule: "show-dashboard-module"
         case .captureScreen, .captureDashboard: "capture-screen"
-        case .analyzeDashboard: "read-dashboard"
+        case .analyzeDashboard, .analyzePage: "read-dashboard"
         }
     }
 }
@@ -47,6 +48,7 @@ public enum CommandError: LocalizedError, Equatable {
     case riskNotAllowed
     case invalidInput
     case applicationNotFound(String)
+    case ambiguousApplication
     case launchFailed
     case fileNotFound
     case unsupportedFile
@@ -61,7 +63,7 @@ public enum CommandError: LocalizedError, Equatable {
         switch self {
         case .pageEmpty: "Safari returned no readable page text. Let the dashboard load and sign in if needed. Visual-only charts may require an explicit screenshot."
         case .pageTooLarge: "The page response exceeded the reading limit. Open a smaller dashboard view and retry."
-        case .wrongSafariPage: "Bring your configured dashboard tab to the front in Safari, then ask again. No other site's page text was accepted."
+        case .wrongSafariPage: "Bring the requested site's tab to the front in Safari, then ask again. No other site's page text was accepted."
         case .safariReadFailed: "Safari could not read the dashboard. Check that the page is loaded and Safari permits automation."
         case .safariReadTimedOut: "Safari did not respond in time. Check any permission prompt and try again."
         case .safariAutomationRequired: "Allow ULTRON to control Safari in System Settings → Privacy & Security → Automation, then retry."
@@ -81,7 +83,8 @@ public enum CommandError: LocalizedError, Equatable {
         case .duplicateTool(let id): "A tool named \(id) is already registered."
         case .riskNotAllowed: "This action requires a safety workflow that is not enabled in Phase 1."
         case .invalidInput: "The tool received an unsupported input."
-        case .applicationNotFound(let name): "\(name) could not be found in ULTRON’s configured applications on this Mac."
+        case .applicationNotFound(let name): "\(name) could not be found in the Applications folders on this Mac. Try its exact application name or bundle identifier."
+        case .ambiguousApplication: "More than one installed application matches that name. Specify its bundle identifier."
         case .launchFailed: "macOS could not open the requested item."
         case .fileNotFound: "That file could not be found on this Mac."
         case .unsupportedFile: "Phase 1 can open folders, plain text, PDF, and common image files. Executables and other file types are not supported."

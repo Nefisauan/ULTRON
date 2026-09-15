@@ -1,5 +1,16 @@
 # Verification — September 14, 2026
 
+## Expanded access and iPhone — September 15, 2026 (0.6.0)
+
+- 41 tests passed, including leading wake-phrase matching, explicit-site scope isolation, native extraction fixtures, source-verified generated observations, remote-executor selection, TLS loopback authentication, wrong-key rejection, input limits, and cancellation reaching host work.
+- macOS build, bundle metadata, and ad-hoc signature checks passed. Updated app installed and relaunched with hands-free off by default.
+- Live `Open TextEdit` succeeded through installed-app discovery, outside the former three-app list.
+- Live Safari rejected an unrelated active site before reading. Selecting the configured dashboard enabled real on-device generation and spoken output without screenshots or a cloud API. Freeform output confused filter labels and chart headings with metrics. The final provider uses guided generation and accepts only verbatim source-matching excerpts, with a fallback to the source digest. Source-checking tests pass. A subsequent live request was blocked because the active Safari site had changed; a successful live source-verified response has not yet been observed.
+- iPhone simulator build passed; installed and launched on iPhone 17 Pro / iOS 26.3. `Hey Ultron` produced `Yes?` and a speaking core. The settings and interface explicitly report no Mac connection.
+- Final Mac and iPhone builds include optional TLS-PSK connection controls. A fresh random 256-bit key authenticates one peer; Stop/expiry revokes hosting. Encrypted exchange and cancellation were tested using harmless loopback commands, not the user's live Mac tools. SDK warnings include a deprecated Security cipher-configuration API used for the PSK suite.
+- Final Mac pairing sheet was visually checked with hosting off. Final iPhone build was installed and launched by simulator tooling; subsequent UI access timed out, so the new phone pairing form has not received a visual acceptance check.
+- Actual microphone recognition, wake/follow-up timing, background operation, and false-activation rates remain unverified with live audio. No permissions or real remote-hosting session were enabled automatically. App-to-app pairing and physical-device installation remain acceptance steps. Clap activation, arbitrary app inspection, and file interpretation remain unimplemented.
+
 ## Holographic core — September 15, 2026
 
 - Replaced the solid orb with a native Canvas wire sphere, four segmented orbital bands, instrument graduations, contextual labels, and a speech envelope driven by native word timing.

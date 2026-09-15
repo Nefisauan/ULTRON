@@ -9,6 +9,7 @@ final class MacSpeechInput: ObservableObject {
     @Published private(set) var isActive = false
     @Published private(set) var transcript = ""
     @Published private(set) var status = ""
+    private(set) var canRestart = false
     private var generation = UUID()
     private var engine: AVAudioEngine?
     private var recognition: SFSpeechRecognitionTask?
@@ -62,7 +63,7 @@ final class MacSpeechInput: ObservableObject {
                     guard let self, self.generation == id else { return }
                     if let text { self.transcript = text }
                     if failed { self.finish("Dictation ended. Review the text or try again.") }
-                    else if finished { self.finish("Review your command, then press Return.") }
+                    else if finished { self.finish("Review your command, then press Return.", restartable: true) }
                 }
             }
             do {
@@ -72,7 +73,7 @@ final class MacSpeechInput: ObservableObject {
                 deadline = Task { [weak self] in
                     try? await Task.sleep(for: .seconds(30))
                     guard !Task.isCancelled, let self, self.generation == id else { return }
-                    self.finish("Recording stopped after 30 seconds. Review your command.")
+                    self.finish("Recording stopped after 30 seconds. Review your command.", restartable: true)
                 }
             } catch { finish("The microphone could not start. Check your input device and retry.") }
         }
@@ -80,7 +81,8 @@ final class MacSpeechInput: ObservableObject {
 
     func stop() { finish(isActive ? "Review your command, then press Return." : "") }
 
-    private func finish(_ message: String) {
+    private func finish(_ message: String, restartable: Bool = false) {
+        canRestart = restartable
         generation = UUID() // Reject delayed permission/recognition callbacks.
         startup?.cancel()
         startup = nil

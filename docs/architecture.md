@@ -32,4 +32,4 @@ Voice and dashboard preferences persist in UserDefaults. The conversation does n
 
 ## Platform status
 
-The Swift package contains a shared core, reusable SwiftUI core, macOS app executable, and voice lab. The packaging script adds bundle metadata and ad-hoc signs the development app. It does not produce a distribution release or an iPhone app. Shared core and UI compile against the installed iOS simulator SDK; an iOS shell and proper Xcode project are still upcoming.
+The Swift package contains a shared core, reusable SwiftUI core, optional encrypted UltronLink transport, macOS executable, and voice lab. The macOS packaging script adds bundle metadata and ad-hoc signs the development app. `ULTRON.xcodeproj` builds the iPhone companion from local package products. A phone command can select an explicit remote executor; transport errors never fall back to local execution. The Mac handler uses its existing registry and refuses commands while busy. Simulator UI/greeting and loopback encrypted transport are verified; app-to-app acceptance and physical-device signing remain separate work.
