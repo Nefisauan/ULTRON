@@ -4,7 +4,13 @@
 
 - Replaced the solid orb with a native Canvas wire sphere, four segmented orbital bands, instrument graduations, contextual labels, and a speech envelope driven by native word timing.
 - Reduced Motion pauses orbital movement and suppresses speech expansion. Background scenes pause the animation timeline; errors use a static amber indicator.
-- macOS package build and ad-hoc signature validation passed. Updated development app installed and its idle accessibility state observed after launch. Subsequent UI access timed out, so visual inspection and live animation review remain pending.
+- macOS package build and ad-hoc signature validation passed. Version 0.5.0 was installed and relaunched. A screenshot verified the holographic layout, readable command controls, and orbital core. Shared UI iOS 17 simulator type-check passed.
+
+## Explicit speech input — September 15, 2026
+
+- Added user-started on-device English dictation, permission explanations, text review before execution, a 30-second recording deadline, and cancellation guards for delayed callbacks. No wake-word listener or cloud fallback.
+- Full existing regression suite: **34 tests, 0 failures**. These tests cover core command and speech-output behavior, not live microphone transcription.
+- Live microphone button entered the permission/listening flow; Stop returned the app to idle before recording. No permission was granted automatically. Actual transcription, device changes, and permission-denial behavior remain manual acceptance checks.
 
 ## Safari page reading and local analysis (0.4.0)
 

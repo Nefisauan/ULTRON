@@ -15,14 +15,15 @@ A native personal AI operating layer for macOS and, eventually, iPhone. The curr
 | Native speech, profile, word-timed visualization | Working; start/finish observed, voice quality still needs audition |
 | Menu bar actions | Implemented; dedicated status-menu interaction pending |
 | Persistent voice preferences and dashboard URL | Implemented; URL save/clear live-tested |
-| Neural style, metallic processing, recognition, wake word | Planned |
+| On-device English dictation with review before sending | Implemented; live permission/audio test pending |
+| Neural style, metallic processing, wake word | Planned |
 | On-demand Safari/display capture and vision boundary | Implemented; Screen Recording permission and explicit target selection required; analyzer is a mock |
 | Direct Safari page reading | Implemented; reads rendered dashboard text/tables on explicit request |
 | Dashboard text analysis | Apple on-device model when available (macOS 26+); exact excerpt and Copy for ChatGPT otherwise |
 | Dashboard backend API and general conversational AI | Planned |
 | iPhone application | Planned; shared core and UI type-check for iOS 17+ |
 
-Phase 1 is **not complete**. Dashboard reading now has a bounded local analysis provider. No paid cloud API or microphone integration is configured.
+Phase 1 is **not complete**. Dashboard reading has a bounded local analysis provider. No paid cloud API is configured. On-device microphone dictation is explicitly user-started; wake-word activation remains planned.
 
 ## Run on macOS
 
@@ -61,7 +62,7 @@ The menu bar uses the same session as the dashboard. It includes Open ULTRON, Op
 
 Settings stores voice selection, rate, pitch, volume, response speech preference, and an optional TradeScale URL in local UserDefaults. Use a non-sensitive dashboard URL without embedded credentials or access tokens. ULTRON opens your existing dashboard; Safari handles your login. Analysis reads the rendered page on request. It does not access login tokens or the site's private backend APIs.
 
-Direct page reading needs Automation access to Safari and Safari's Allow JavaScript from Apple Events setting. It does not require Screen Recording. Screenshot commands separately request Screen Recording. No microphone or Accessibility permission is requested. Page data stays in memory; only clicking Copy for ChatGPT places it on your clipboard for you to paste manually. ULTRON makes no cloud inference request. The conversation is limited to 40 in-memory entries, and the latest page snapshot is cleared by Stop or a new command.
+Direct page reading needs Automation access to Safari and Safari's Allow JavaScript from Apple Events setting. It does not require Screen Recording. Screenshot commands separately request Screen Recording. The microphone button requests Microphone and Speech Recognition permissions; English on-device recognition must be available. Dictation stops after 30 seconds or when finished/cancelled. Review the text and press Return to execute it. No Accessibility permission is requested. Page data stays in memory; only clicking Copy for ChatGPT places it on your clipboard for you to paste manually. ULTRON makes no cloud inference request. The conversation is limited to 40 in-memory entries, and the latest page snapshot is cleared by Stop or a new command.
 
 Bring the correct dashboard tab to the front in Safari before analysis. Hidden content and form fields are excluded. Offscreen rendered text can be included, but iframe/shadow content, canvas charts, other tabs, and off-page data are not read. The local model sees at most 6,000 bytes of text and reports that limit. Treat model conclusions as interpretations to verify against the displayed values.
 

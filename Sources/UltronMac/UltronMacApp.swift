@@ -42,10 +42,11 @@ private struct MenuActions: View {
             NSApp.activate(ignoringOtherApps: true)
             session.submit("Look at my screen")
         }
-        Button("Stop") { session.commands.stop() }
+        Button("Stop") { session.speechInput.stop(); session.commands.stop() }
         Divider()
         SettingsLink()
         Button("Quit ULTRON") {
+            session.speechInput.stop()
             session.commands.stop()
             NSApp.terminate(nil)
         }.keyboardShortcut("q")

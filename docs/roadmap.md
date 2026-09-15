@@ -6,6 +6,7 @@
 2. Shared command/state foundation, safe-tool registry, macOS command dashboard, reusable animated core, sample dashboard provider, menu bar, and persistent settings.
 3. Explicit screenshot capture with permission checks and mock vision analyzer.
 4. Safari page-text reading, optional Apple on-device interpretation, and manual Copy for ChatGPT handoff. No paid cloud API is configured.
+5. Holographic orbital core and explicit on-device English dictation with review before command execution. Microphone transcription still needs live acceptance testing.
 
 ## Next Phase 1 work
 
@@ -16,6 +17,6 @@
 
 ## Later, only with approval
 
-Phase 2: conversational AI, push-to-talk/recognition, streaming, and tool calling. Evaluate a licensed neural TTS adapter and measured playback levels. Implement optional metallic processing only with actual DSP support.
+Phase 2: conversational AI, hands-free recognition, streaming, and tool calling. Evaluate a licensed neural TTS adapter and measured playback levels. Implement optional metallic processing only with actual DSP support.
 
 Later phases retain the original brief's sequence: advanced Mac control; business intelligence; market intelligence; authenticated iPhone–Mac communication; contextual memory; optional local wake word/clap; multi-step workflows; user-controlled proactive intelligence.

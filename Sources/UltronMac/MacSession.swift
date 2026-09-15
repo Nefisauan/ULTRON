@@ -6,6 +6,7 @@ final class MacSession: ObservableObject {
     let preferences = LocalPreferences()
     let permissions = MacPermissionService()
     let synthesizer = AppleSpeechSynthesizer()
+    let speechInput = MacSpeechInput()
     let voice: VoiceController
     let commands: CommandController
     @Published private(set) var modules: [DashboardModule] = []
@@ -36,6 +37,7 @@ final class MacSession: ObservableObject {
     }
 
     func submit(_ text: String) {
+        speechInput.stop()
         commands.submit(text, context: .init(dashboard: preferences.dashboard),
                         profile: preferences.voiceProfile, speakResponses: preferences.speakResponses)
     }

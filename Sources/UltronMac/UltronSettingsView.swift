@@ -55,9 +55,9 @@ struct UltronSettingsView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("Privacy & devices") {
-                Text("Speech uses installed Apple voices. No microphone monitoring or cloud AI is active. Screen capture occurs only when requested.")
+                Text("Speech uses installed Apple voices. The microphone button starts on-device English dictation for up to 30 seconds. Review the recognized text before sending. No background listening or cloud AI is active. Screen capture occurs only when requested.")
                 Text("Mac ↔ iPhone connection: Not configured.")
-                Text("Live AI vision, live data integrations, and speech recognition are planned.")
+                Text("Live AI vision, live data integrations, and wake-word activation are planned.")
                     .foregroundStyle(.secondary)
             }
         }.formStyle(.grouped).padding().frame(width: 620, height: 650)

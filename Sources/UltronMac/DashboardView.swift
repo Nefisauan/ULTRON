@@ -6,6 +6,9 @@ struct DashboardView: View {
     @ObservedObject var session: MacSession
     @ObservedObject private var commands: CommandController
     @ObservedObject private var voice: VoiceController
+    @ObservedObject private var speechInput: MacSpeechInput
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var listeningOperation: UUID?
     @ObservedObject private var stateMachine: UltronStateMachine
     @State private var input = ""
     @State private var showDeveloper = false
@@ -15,6 +18,7 @@ struct DashboardView: View {
         self.session = session
         commands = session.commands
         voice = session.voice
+        speechInput = session.speechInput
         stateMachine = session.voice.stateMachine
     }
 
@@ -57,6 +61,18 @@ struct DashboardView: View {
         .background(Color(red: 0.025, green: 0.035, blue: 0.052))
         .preferredColorScheme(.dark)
         .task { await session.loadDashboard() }
+        .onChange(of: speechInput.transcript) { input = speechInput.transcript }
+        .onChange(of: speechInput.isActive) {
+            if speechInput.isActive {
+                commands.stop()
+                listeningOperation = stateMachine.begin(.listening)
+            } else if let operation = listeningOperation {
+                stateMachine.transition(to: .idle, for: operation)
+                listeningOperation = nil
+            }
+        }
+        .onChange(of: scenePhase) { if scenePhase == .background { speechInput.stop() } }
+        .onDisappear { speechInput.stop() }
         .sheet(isPresented: $showPageReview) {
             if let page = commands.lastResult?.pageSnapshot { DashboardPageReview(page: page) }
             else { Text("This reading has been cleared. Read the dashboard again.").padding() }
@@ -120,7 +136,7 @@ struct DashboardView: View {
                     if commands.conversation.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("A direct line to your workspace.").foregroundStyle(.primary)
-                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nCommands are typed. Dashboard analysis reads Safari page text; screenshots are optional.")
+                            Text("Try “Hey Ultron”, “Open Safari”, or “Show Markets”.\nType a command or use the microphone, then review and send. Dashboard analysis reads Safari page text.")
                                 .foregroundStyle(.secondary)
                         }.font(.callout).padding(18)
                     }
@@ -147,11 +163,21 @@ struct DashboardView: View {
                 Image(systemName: "chevron.right").foregroundStyle(.cyan)
                 TextField("Give ULTRON a command…", text: $input).textFieldStyle(.plain).onSubmit(submit)
                     .accessibilityLabel("Command")
-                Button("Stop") { commands.stop() }.keyboardShortcut(.escape, modifiers: [])
+                Button {
+                    if speechInput.isActive { speechInput.stop() }
+                    else { speechInput.start() }
+                } label: { Image(systemName: speechInput.isActive ? "mic.fill" : "mic") }
+                    .foregroundStyle(speechInput.isActive ? .orange : .cyan)
+                    .accessibilityLabel(speechInput.isActive ? "Finish dictation" : "Dictate command")
+                    .help("On-device English dictation. Review the text before sending.")
+                Button("Stop") { speechInput.stop(); commands.stop() }.keyboardShortcut(.escape, modifiers: [])
                 Button { submit() } label: { Image(systemName: "arrow.up") }
                     .buttonStyle(.borderedProminent).tint(.cyan).disabled(input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .accessibilityLabel("Run command")
             }.padding(15).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
+            if !speechInput.status.isEmpty {
+                Text(speechInput.status).font(.caption).foregroundStyle(speechInput.isActive ? .cyan : .secondary)
+            }
             Text("Open TradeScale · Analyze my dashboard · Show Business / Markets / Projects / Today")
                 .font(.caption2).foregroundStyle(.secondary)
         }.padding(.horizontal, 28).padding(.bottom, 22)
@@ -162,7 +188,7 @@ struct DashboardView: View {
             Text("STATE: \(stateMachine.state.rawValue) · Speech: Apple native · Analysis: Apple on-device / page excerpt").font(.caption.monospaced())
             Text("Build \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "development")").font(.caption2.monospaced())
             Text("Tools: \(commands.registry.descriptors.map(\.identifier).joined(separator: ", "))").font(.caption2.monospaced())
-            Text("Voice pulses use word timing. Screen Recording is requested only for explicit capture. No microphone or Accessibility access.").font(.caption2).foregroundStyle(.secondary)
+            Text("Voice pulses use word timing. Microphone use requires the dictation button. Screen Recording is requested only for explicit capture.").font(.caption2).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 28).padding(.bottom, 12)
     }
 
