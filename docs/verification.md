@@ -1,5 +1,11 @@
 # Verification — September 14, 2026
 
+## Holographic core — September 15, 2026
+
+- Replaced the solid orb with a native Canvas wire sphere, four segmented orbital bands, instrument graduations, contextual labels, and a speech envelope driven by native word timing.
+- Reduced Motion pauses orbital movement and suppresses speech expansion. Background scenes pause the animation timeline; errors use a static amber indicator.
+- macOS package build and ad-hoc signature validation passed. Updated development app installed and its idle accessibility state observed after launch. Subsequent UI access timed out, so visual inspection and live animation review remain pending.
+
 ## Safari page reading and local analysis (0.4.0)
 
 - Full Swift test suite: **34 tests, 0 failures**, including Safari script compilation and rendered WebKit fixtures for hidden/private/form text exclusion, tables, and origin checks. Native helper tests require running outside the command sandbox.
