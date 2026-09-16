@@ -1,5 +1,14 @@
 # Verification — September 15, 2026
 
+## Live conversation and dashboard acceptance
+
+- The live Apple model initially refused to recall a supplied synthetic test label despite receiving conversation history. Updated instructions explicitly distinguish supplied current-session context from persistent memory.
+- After rebuilding and restarting, the model acknowledged the synthetic label and correctly recalled it on a follow-up request. Clear Conversation removed the visible history and the model no longer returned the label when asked again. This is a smoke test, not a comprehensive model-accuracy evaluation.
+- Open TradeScale followed by Analyze my dashboard succeeded against the configured Safari page. The final source-grounded provider returned three excerpts; all three were independently checked against the page-review text. No screenshot, clipboard handoff, or cloud analysis was used. Private dashboard content is not recorded here.
+- Speaking state was observed for model and dashboard responses. Audible quality, live microphone transcription, wake timing, and false activations remain unverified.
+- macOS build passed, updated app installed and launched, and all 48 regression tests passed. This update changes only the Mac model prompt and documentation; shared iPhone code is unchanged.
+
+
 ## Safari favorite commands
 
 - 48 tests passed. New fixtures verify exact title matching, nested Favorites scope, exclusion of other bookmarks, duplicate ambiguity, unsafe URL rejection, malformed input, and input limits.

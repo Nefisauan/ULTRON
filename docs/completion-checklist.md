@@ -14,7 +14,7 @@ ULTRON is a working development app, not a finished general-purpose computer age
 ## Required before calling the experience finished
 
 1. **Voice acceptance:** test actual microphone input, wake phrase and follow-up timing, interruptions, output routes, false activations, accessibility, and battery use. Voice activation requires the running app and an explicitly enabled session. Clap activation is not implemented.
-2. **Analysis quality:** verify final source-grounded dashboard output live; add evaluated chart/image interpretation and stronger reasoning. Current excerpts do not establish trends or explain chart values. Screenshot vision is still a mock. Cloud services require an explicit provider and billing decision.
+2. **Analysis quality:** expand evaluation beyond the successful live source-grounded dashboard smoke test; add chart/image interpretation and stronger reasoning. Current excerpts do not establish trends or explain chart values. Screenshot vision is still a mock. Cloud services require an explicit provider and billing decision.
 3. **Computer actions:** add scoped app and document reading, support for custom Safari Favorites folders/profiles, and per-app integrations. Opening a file does not read it. Add confirmation and recovery for consequential workflows before implementing them.
 4. **Conversation and workflows:** evaluate model accuracy and latency, add reviewed multi-step planning, streamed responses, editable persistent memory, and explicit permissions. Current AI replies cannot execute tools; history disappears on restart or Clear Conversation.
 5. **Live data:** replace sample business/market/project cards with authenticated integrations selected by the user. Keep the existing business dashboard as the source of truth.
