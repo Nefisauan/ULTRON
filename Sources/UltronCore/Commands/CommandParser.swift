@@ -24,6 +24,12 @@ public struct CommandParser: Sendable {
         let normalized = trimmed.split(whereSeparator: \.isWhitespace).joined(separator: " ")
         let key = normalized.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: ".?!"))
         if let intent = Self.exact[key] { return intent }
+        if normalized.lowercased().hasPrefix("ask ") {
+            return .ask(String(normalized.dropFirst(4)))
+        }
+        if ["what ", "why ", "how ", "who ", "explain ", "tell me "].contains(where: { key.hasPrefix($0) }) {
+            return .ask(normalized)
+        }
         for prefix in ["analyze ", "read page "] where normalized.lowercased().hasPrefix(prefix) {
             let target = String(normalized.dropFirst(prefix.count))
             return .analyzePage(try BusinessDashboardConfiguration.validate(target))

@@ -14,6 +14,7 @@ public struct UltronCommand: Identifiable, Sendable {
 
 public enum UltronIntent: Equatable, Sendable {
     case greet
+    case ask(String)
     case openApplication(String)
     case openDashboard
     case openURL(URL)
@@ -27,6 +28,7 @@ public enum UltronIntent: Equatable, Sendable {
     public var toolIdentifier: String? {
         switch self {
         case .greet: nil
+        case .ask: "ask-ai"
         case .openApplication: "open-application"
         case .openDashboard, .openURL: "open-url"
         case .openFile: "open-file"
@@ -39,6 +41,7 @@ public enum UltronIntent: Equatable, Sendable {
 
 public enum CommandError: LocalizedError, Equatable {
     case empty
+    case aiUnavailable
     case unsupported
     case invalidURL
     case invalidFilePath
@@ -61,6 +64,7 @@ public enum CommandError: LocalizedError, Equatable {
 
     public var errorDescription: String? {
         switch self {
+        case .aiUnavailable: "The on-device AI model is unavailable or could not answer. Local commands still work; no cloud request was made."
         case .pageEmpty: "Safari returned no readable page text. Let the dashboard load and sign in if needed. Visual-only charts may require an explicit screenshot."
         case .pageTooLarge: "The page response exceeded the reading limit. Open a smaller dashboard view and retry."
         case .wrongSafariPage: "Bring the requested site's tab to the front in Safari, then ask again. No other site's page text was accepted."

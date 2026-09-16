@@ -1,4 +1,13 @@
-# Verification — September 14, 2026
+# Verification — September 15, 2026
+
+## Conversation and live remote acceptance — September 15, 2026
+
+- 45 tests passed, including question/action routing, bounded memory, history transfer, mock labeling, oversized question rejection, and clearing memory while an action is pending.
+- macOS packaging and iPhone simulator builds passed with the shared AIProvider and ConversationMemory interfaces. General model responses have not yet received live UI acceptance testing.
+- With explicit user authorization, the iPhone simulator connected through the Mac pairing form using a temporary TLS session. `Open Calculator` returned success on the phone and Calculator's Mac window was confirmed.
+- Stop hosting revoked the session; the Mac returned to Disconnected. The temporary key was not written to repository files. Physical-device testing remains pending.
+- This supersedes the earlier pending app-to-app pairing check below. Remaining release work is tracked in completion-checklist.md.
+
 
 ## Expanded access and iPhone — September 15, 2026 (0.6.0)
 

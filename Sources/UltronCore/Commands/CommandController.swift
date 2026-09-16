@@ -22,12 +22,14 @@ public final class CommandController: ObservableObject {
     public var remoteExecutor: (@MainActor @Sendable (String) async throws -> String)?
     public var stateMachine: UltronStateMachine { voice.stateMachine }
     private let parser = CommandParser()
+    private let memory: any ConversationMemory
     private var task: Task<Void, Never>?
     private let logger = Logger(subsystem: "dev.ultron", category: "commands")
 
-    public init(voice: VoiceController, registry: UltronToolRegistry) {
+    public init(voice: VoiceController, registry: UltronToolRegistry, memory: (any ConversationMemory)? = nil) {
         self.voice = voice
         self.registry = registry
+        self.memory = memory ?? InMemoryConversationMemory()
     }
 
     @discardableResult
@@ -40,6 +42,7 @@ public final class CommandController: ObservableObject {
         lastCommand = command
         lastResult = nil
         isExecuting = true
+        let history = memory.messages
         append(.user, text)
         logger.info("Command started") // Never log command text, URLs, or file paths.
         let remoteExecutor = self.remoteExecutor
@@ -55,8 +58,8 @@ public final class CommandController: ObservableObject {
                 } else {
                     let intent = try parser.parse(command.text)
                     let isReading = intent.toolIdentifier == "capture-screen" || intent.toolIdentifier == "read-dashboard"
-                    stateMachine.transition(to: isReading ? .seeing : .acting, for: operation)
-                    let toolContext = UltronToolContext(dashboard: context.dashboard) { [weak self] activity in
+                    stateMachine.transition(to: isReading ? .seeing : intent.toolIdentifier == "ask-ai" ? .thinking : .acting, for: operation)
+                    let toolContext = UltronToolContext(dashboard: context.dashboard, conversation: history) { [weak self] activity in
                         self?.stateMachine.transition(to: activity.state, for: operation)
                     }
                     result = try await registry.execute(intent, context: toolContext)
@@ -100,7 +103,15 @@ public final class CommandController: ObservableObject {
     }
 
     private func append(_ role: ConversationEntry.Role, _ text: String) {
+        memory.append(.init(role: role == .user ? .user : .assistant, text: text))
         conversation.append(.init(role: role, text: text))
         if conversation.count > 40 { conversation.removeFirst(conversation.count - 40) }
+    }
+
+    public func clearConversation() {
+        stop()
+        conversation.removeAll()
+        memory.clear()
+        lastCommand = nil
     }
 }

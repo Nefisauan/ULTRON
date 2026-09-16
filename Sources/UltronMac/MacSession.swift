@@ -26,6 +26,7 @@ final class MacSession: ObservableObject {
             try registry.register(OpenURLTool(opener: system))
             try registry.register(OpenFileTool(opener: system))
             try registry.register(ShowDashboardModuleTool())
+            try registry.register(AskAITool(provider: OnDeviceAIProvider()))
             try registry.register(ReadDashboardTool(reader: SafariDashboardReader(), analyzer: OnDeviceDashboardAnalyzer()))
             try registry.register(CaptureScreenTool(permissions: permissions, capturer: MacScreenCapturer(), analyzer: MockVisionAnalyzer()))
         } catch {

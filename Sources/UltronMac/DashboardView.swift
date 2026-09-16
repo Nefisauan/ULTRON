@@ -96,6 +96,7 @@ struct DashboardView: View {
             Label(link.isHosting ? "HOSTING" : "LOCAL", systemImage: "circle.fill").font(.caption2.monospaced()).foregroundStyle(.cyan)
             Button { showPairing = true } label: { Image(systemName: "iphone") }.help("Connect iPhone")
             Button { showDeveloper.toggle() } label: { Image(systemName: "terminal") }.help("Developer details")
+            Button { commands.clearConversation() } label: { Image(systemName: "text.badge.xmark") }.help("Clear conversation and short-term memory")
             SettingsLink { Image(systemName: "slider.horizontal.3") }.help("Settings")
         }.buttonStyle(.plain).padding(.horizontal, 30).padding(.vertical, 24)
     }

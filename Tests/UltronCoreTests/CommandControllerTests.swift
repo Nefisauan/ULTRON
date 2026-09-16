@@ -29,6 +29,26 @@ private final class DelayedApplicationController: ApplicationController {
 
 final class CommandControllerTests: XCTestCase {
     @MainActor
+    func testClearConversationCancelsPendingWorkAndErasesMemory() async throws {
+        let system = DelayedApplicationController()
+        let memory = InMemoryConversationMemory()
+        let registry = UltronToolRegistry()
+        try registry.register(OpenApplicationTool(controller: system))
+        let controller = CommandController(voice: VoiceController(synthesizer: RecordingSpeech()), registry: registry, memory: memory)
+        var events = system.events.stream.makeAsyncIterator()
+        let work = controller.submit("Open Safari", context: .init(dashboard: .init()))
+        await events.next()
+        controller.clearConversation()
+        system.finish()
+        await work.value
+        XCTAssertTrue(memory.messages.isEmpty)
+        XCTAssertTrue(controller.conversation.isEmpty)
+        XCTAssertNil(controller.lastCommand)
+        XCTAssertNil(controller.lastResult)
+        XCTAssertEqual(controller.stateMachine.state, .idle)
+    }
+
+    @MainActor
     func testRemoteExecutorIsExplicitAndNeverFallsBackToLocalOnFailure() async throws {
         let speech = RecordingSpeech()
         let controller = CommandController(voice: VoiceController(synthesizer: speech), registry: UltronToolRegistry())
