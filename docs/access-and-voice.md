@@ -36,3 +36,13 @@ The local dashboard model now selects short observations that must match the ext
 Use `Open Favorite [exact saved title]` to open an HTTP(S) favorite in Safari. Matching ignores case and searches the standard Safari Favorites (`BookmarksBar`) folder and its subfolders. Other bookmarks and browsing history are not searched. Duplicate titles with distinct URLs are rejected; use an explicit URL or rename them in Safari.
 
 The Mac reads its local bookmark plist only for this command, with bounded input and traversal. It does not persist or upload the bookmark collection. macOS privacy restrictions may deny this read; the command then explains that you can use the web URL instead. Custom Favorites folders and Safari profile-specific bookmark stores are not supported. This integration uses Safari's local data format and may need adaptation if Apple changes it. Live access on the user's Safari profile remains unverified.
+
+## Live hands-free acceptance sequence
+
+1. Enable Hey Ultron in the running Mac app. Approve Microphone and Speech Recognition if you want to allow recording. Wait for the status to say Listening.
+2. Say “Hey Ultron,” then wait for “Yes?” and the listening status. Say “Open TradeScale.” The 12-second follow-up window begins when the microphone is recording after the reply, not during speech or permission setup.
+3. After the action finishes, say “Hey Ultron, analyze my dashboard.” Confirm the selected Safari tab is the dashboard.
+4. During speech, click Stop or press Escape. Confirm playback stops and Hands-free is off. Spoken interruption during ULTRON playback is not supported because recognition is paused to avoid self-triggering.
+5. Enable again, say “Hey Ultron,” wait more than 12 seconds after listening resumes, then say a command without the wake phrase. It must not run. Repeat with the wake phrase to confirm recovery.
+
+Record recognition mistakes, missed wakes, accidental activation, and response delay. No passing live-audio result is assumed from automated tests. The app must be running; clap activation and waking a sleeping Mac are not implemented.

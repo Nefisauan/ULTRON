@@ -7,6 +7,7 @@ import Foundation
 @MainActor
 final class MacSpeechInput: ObservableObject {
     @Published private(set) var isActive = false
+    @Published private(set) var isRecording = false
     @Published private(set) var transcript = ""
     @Published private(set) var status = ""
     private(set) var canRestart = false
@@ -69,6 +70,7 @@ final class MacSpeechInput: ObservableObject {
             do {
                 engine.prepare()
                 try engine.start()
+                isRecording = true
                 status = "Listening on device · tap microphone to finish · 30-second limit"
                 deadline = Task { [weak self] in
                     try? await Task.sleep(for: .seconds(30))
@@ -97,6 +99,7 @@ final class MacSpeechInput: ObservableObject {
         recognizer = nil
         request = nil
         isActive = false
+        isRecording = false
         status = message
     }
 }

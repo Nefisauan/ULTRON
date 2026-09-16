@@ -20,7 +20,7 @@ final class MacWakeListener: ObservableObject {
             var lastText = ""
             var changedAt = Date()
             var started = false
-            var followupUntil = Date.distantPast
+            var followup = WakeFollowupWindow()
             while !Task.isCancelled, isEnabled, Date() < expires {
                 // Never interpret ULTRON's own output or interrupt an active operation.
                 if state.state != .idle && state.state != .error {
@@ -28,6 +28,12 @@ final class MacWakeListener: ObservableObject {
                     started = false
                     lastText = ""
                 } else {
+                    if input.isRecording { followup.microphoneReady(at: Date()) }
+                    if input.isActive {
+                        status = input.isRecording
+                            ? (followup.acceptsCommand(at: Date()) ? "Listening for your command · 12-second follow-up window" : "Listening · say ‘Hey Ultron’ · 10-minute session")
+                            : input.status
+                    }
                     if started && !input.isActive && !input.canRestart {
                         let failure = input.status
                         stop()
@@ -35,16 +41,16 @@ final class MacWakeListener: ObservableObject {
                         return
                     }
                     let text = input.transcript
-                    let followup = text.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let candidate = WakePhrase.command(in: text) ?? (Date() < followupUntil && !followup.isEmpty ? followup : nil)
+                    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let candidate = WakePhrase.command(in: text) ?? (followup.acceptsCommand(at: Date()) && !trimmed.isEmpty ? trimmed : nil)
                     if text != lastText { lastText = text; changedAt = Date() }
                     if started, let command = candidate,
                        Date().timeIntervalSince(changedAt) >= 1.2 {
                         input.stop()
                         started = false
                         lastText = ""
-                        followupUntil = command == "Hey Ultron" ? Date().addingTimeInterval(12) : .distantPast
-                        status = command == "Hey Ultron" ? "Ready for your command · 12-second follow-up window" : "Hands-free · say ‘Hey Ultron’ · 10-minute session"
+                        if command == "Hey Ultron" { followup.arm() } else { followup.clear() }
+                        status = command == "Hey Ultron" ? "Responding · your follow-up window starts when the microphone is ready" : "Processing your command · microphone paused"
                         submit(command)
                         try? await Task.sleep(for: .milliseconds(500))
                     } else if !input.isActive {

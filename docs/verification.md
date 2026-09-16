@@ -1,5 +1,13 @@
 # Verification — September 15, 2026
 
+## Hands-free follow-up timing
+
+- Fixed the follow-up deadline starting before the greeting finished. The window now arms on greeting dispatch and starts only after the microphone has actually started recording. Permission/startup delays no longer consume it.
+- Added controlled-clock tests for delayed microphone readiness, the exact 12-second boundary, repeated polling without deadline extension, and clearing a pending window. All 50 tests passed.
+- macOS package build passed; updated app installed and launched. Live UI test started a spoken answer, pressed Escape during Speaking, and verified the core returned to Idle.
+- No live audio recognition result is claimed. Hands-free was left off pending the user's availability to speak. The live acceptance sequence is documented in access-and-voice.md.
+
+
 ## Live conversation and dashboard acceptance
 
 - The live Apple model initially refused to recall a supplied synthetic test label despite receiving conversation history. Updated instructions explicitly distinguish supplied current-session context from persistent memory.

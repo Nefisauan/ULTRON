@@ -202,7 +202,7 @@ struct DashboardView: View {
             Text("STATE: \(stateMachine.state.rawValue) · Speech: Apple native · Analysis: Apple on-device / page excerpt").font(.caption.monospaced())
             Text("Build \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "development")").font(.caption2.monospaced())
             Text("Tools: \(commands.registry.descriptors.map(\.identifier).joined(separator: ", "))").font(.caption2.monospaced())
-            Text("Voice pulses use word timing. Microphone use requires the dictation button. Screen Recording is requested only for explicit capture.").font(.caption2).foregroundStyle(.secondary)
+            Text("Voice pulses use word timing. Microphone use requires dictation or an enabled Hey Ultron session. Screen Recording is requested only for explicit capture.").font(.caption2).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 28).padding(.bottom, 12)
     }
 
