@@ -46,3 +46,9 @@ The Mac reads its local bookmark plist only for this command, with bounded input
 5. Enable again, say “Hey Ultron,” wait more than 12 seconds after listening resumes, then say a command without the wake phrase. It must not run. Repeat with the wake phrase to confirm recovery.
 
 Record recognition mistakes, missed wakes, accidental activation, and response delay. No passing live-audio result is assumed from automated tests. The app must be running; clap activation and waking a sleeping Mac are not implemented.
+
+## Dashboard follow-up questions
+
+After `Analyze my dashboard`, ask `What does that mean?` or `Ask what information is missing from this reading?`. The local model receives up to 4,000 UTF-8 bytes of saved page text with its timestamp. It does not reread Safari. The saved page remains available only for consecutive questions, for five minutes, and is erased by Clear Conversation. Conversation messages may still contain earlier quoted observations until cleared.
+
+Follow-up answers are model interpretations, not the source-verified excerpts returned by the initial reader. Check their claims against the page; charts, causes, and trends may be unavailable. No cloud provider is configured.

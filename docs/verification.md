@@ -1,3 +1,9 @@
+# Dashboard follow-up context — September 16, 2026
+
+- Questions after a requested dashboard reading now pass the bounded saved page to the local AI provider, along with its capture time. Replies are labeled as interpretations to verify, not source-verified measurements.
+- The saved page is discarded for a non-question command, after five minutes, or by Clear Conversation. Existing conversation text follows its separate bounded history policy. No implicit page refresh or cloud upload occurs.
+- 52 tests passed, including page context transfer, expiration, invalidation, and clearing. Mac packaging passed. Model answer accuracy for this new follow-up path still needs live evaluation; prompts cannot guarantee factual grounding.
+
 # Crash repair — September 16, 2026
 
 - Three user crash reports identified the same SIGTRAP: Swift actor-isolation assertion in the speech authorization completion callback, delivered on a background TCC queue.

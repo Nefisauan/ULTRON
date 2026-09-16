@@ -21,6 +21,7 @@ public final class CommandController: ObservableObject {
     public let registry: UltronToolRegistry
     public var remoteExecutor: (@MainActor @Sendable (String) async throws -> String)?
     public var stateMachine: UltronStateMachine { voice.stateMachine }
+    private var pageContext: DashboardPage?
     private let parser = CommandParser()
     private let memory: any ConversationMemory
     private var task: Task<Void, Never>?
@@ -43,6 +44,12 @@ public final class CommandController: ObservableObject {
         lastResult = nil
         isExecuting = true
         let history = memory.messages
+        // Only consecutive questions retain the last requested reading, for at most five minutes.
+        if (try? parser.parse(text).toolIdentifier) != "ask-ai" ||
+            pageContext.map({ Date().timeIntervalSince($0.capturedAt) >= 300 }) == true {
+            pageContext = nil
+        }
+        let page = pageContext
         append(.user, text)
         logger.info("Command started") // Never log command text, URLs, or file paths.
         let remoteExecutor = self.remoteExecutor
@@ -59,7 +66,7 @@ public final class CommandController: ObservableObject {
                     let intent = try parser.parse(command.text)
                     let isReading = intent.toolIdentifier == "capture-screen" || intent.toolIdentifier == "read-dashboard"
                     stateMachine.transition(to: isReading ? .seeing : intent.toolIdentifier == "ask-ai" ? .thinking : .acting, for: operation)
-                    let toolContext = UltronToolContext(dashboard: context.dashboard, conversation: history) { [weak self] activity in
+                    let toolContext = UltronToolContext(dashboard: context.dashboard, conversation: history, page: page) { [weak self] activity in
                         self?.stateMachine.transition(to: activity.state, for: operation)
                     }
                     result = try await registry.execute(intent, context: toolContext)
@@ -67,6 +74,7 @@ public final class CommandController: ObservableObject {
                 try Task.checkCancellation()
                 guard stateMachine.owns(operation) else { return }
                 lastResult = result
+                if let reading = result.pageSnapshot { pageContext = reading }
                 if let module = result.selectedModule { selectedModule = module }
                 append(.ultron, result.message)
                 isExecuting = false
@@ -112,6 +120,7 @@ public final class CommandController: ObservableObject {
         stop()
         conversation.removeAll()
         memory.clear()
+        pageContext = nil
         lastCommand = nil
     }
 }

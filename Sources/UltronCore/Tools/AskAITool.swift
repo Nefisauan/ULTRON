@@ -8,9 +8,9 @@ public struct AskAITool: UltronTool {
               provider.capabilities.contains(.chat) else { throw CommandError.invalidInput }
         try Task.checkCancellation()
         context.onProgress?(.thinking)
-        let response = try await provider.respond(to: .init(question: question, history: context.conversation))
+        let response = try await provider.respond(to: .init(question: question, history: context.conversation, page: context.page))
         try Task.checkCancellation()
         guard !response.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw CommandError.aiUnavailable }
-        return .init(message: (response.isMock ? "Development mock: " : "AI reply — no actions executed:\n") + String(response.text.prefix(6000)))
+        return .init(message: (response.isMock ? "Development mock: " : (context.page == nil ? "AI reply — no actions executed:\n" : "AI interpretation of the last page reading — verify before acting:\n")) + String(response.text.prefix(6000)))
     }
 }

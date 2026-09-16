@@ -12,7 +12,10 @@ public struct AIMessage: Codable, Equatable, Sendable {
 public struct AIRequest: Sendable {
     public let question: String
     public let history: [AIMessage]
-    public init(question: String, history: [AIMessage] = []) { self.question = question; self.history = history }
+    public let page: DashboardPage?
+    public init(question: String, history: [AIMessage] = [], page: DashboardPage? = nil) {
+        self.question = question; self.history = history; self.page = page
+    }
 }
 
 public struct AIResponse: Sendable {

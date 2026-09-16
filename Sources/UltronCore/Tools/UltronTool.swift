@@ -22,12 +22,15 @@ public struct UltronToolDescriptor: Equatable, Sendable {
 public struct UltronToolContext: Sendable {
     public let dashboard: BusinessDashboardConfiguration
     public let conversation: [AIMessage]
+    public let page: DashboardPage?
     public let onProgress: (@MainActor @Sendable (UltronActivity) -> Void)?
     public init(dashboard: BusinessDashboardConfiguration,
                 conversation: [AIMessage] = [],
+                page: DashboardPage? = nil,
                 onProgress: (@MainActor @Sendable (UltronActivity) -> Void)? = nil) {
         self.dashboard = dashboard
         self.conversation = conversation
+        self.page = page
         self.onProgress = onProgress
     }
 }

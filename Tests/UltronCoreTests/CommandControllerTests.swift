@@ -139,3 +139,46 @@ final class CommandControllerTests: XCTestCase {
         XCTAssertFalse(controller.isExecuting)
     }
 }
+
+@MainActor
+private final class PageContextProbe: UltronTool {
+    let descriptor: UltronToolDescriptor
+    var page: DashboardPage?
+    var received: [DashboardPage?] = []
+    init(_ identifier: String, page: DashboardPage? = nil) {
+        descriptor = .init(identifier: identifier, description: "Test", inputRequirements: "", risk: .readOnly)
+        self.page = page
+    }
+    func execute(_ intent: UltronIntent, context: UltronToolContext) async throws -> UltronToolResult {
+        received.append(context.page)
+        return .init(message: "Test result", pageSnapshot: page)
+    }
+}
+
+extension CommandControllerTests {
+    @MainActor
+    func testPageContextSurvivesQuestionsButClearsOnOtherCommandsAndErase() async throws {
+        let page = try DashboardPage(title: "Fixture", url: URL(string: "https://example.com")!, text: "Leads 12")
+        let reader = PageContextProbe("read-dashboard", page: page)
+        let question = PageContextProbe("ask-ai")
+        let registry = UltronToolRegistry()
+        try registry.register(reader)
+        try registry.register(question)
+        let controller = CommandController(voice: VoiceController(synthesizer: RecordingSpeech()), registry: registry)
+        let context = UltronToolContext(dashboard: .init())
+        await controller.submit("Analyze my dashboard", context: context, speakResponses: false).value
+        await controller.submit("What does that mean?", context: context, speakResponses: false).value
+        XCTAssertEqual(question.received.last!, page)
+        await controller.submit("Hey Ultron", context: context, speakResponses: false).value
+        await controller.submit("Ask explain", context: context, speakResponses: false).value
+        XCTAssertNil(question.received.last!)
+        await controller.submit("Analyze my dashboard", context: context, speakResponses: false).value
+        controller.clearConversation()
+        await controller.submit("Ask explain", context: context, speakResponses: false).value
+        XCTAssertNil(question.received.last!)
+        reader.page = try DashboardPage(title: "Old", url: URL(string: "https://example.com")!, text: "Leads 4", capturedAt: Date().addingTimeInterval(-301))
+        await controller.submit("Analyze my dashboard", context: context, speakResponses: false).value
+        await controller.submit("Ask explain", context: context, speakResponses: false).value
+        XCTAssertNil(question.received.last!)
+    }
+}
