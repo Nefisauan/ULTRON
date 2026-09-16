@@ -1,3 +1,11 @@
+# Crash repair — September 16, 2026
+
+- Three user crash reports identified the same SIGTRAP: Swift actor-isolation assertion in the speech authorization completion callback, delivered on a background TCC queue.
+- Moved authorization bridging into a nonisolated helper with explicitly Sendable registration and completion closures. UI updates still occur on the main actor after awaiting the result; generation checks reject stale results.
+- Added a Mac-specific regression test delivering authorized, denied, and restricted results from a global background queue to a main-actor caller. All 51 tests passed.
+- Added permission-specific startup status and a 20-second startup timeout so pending permission/device setup can recover without hanging indefinitely.
+- Built and installed the repaired app. Live Enable Hey Ultron reached Listening without quitting, and Stop disabled hands-free. The final build also reached on-device dictation Listening, then Stop returned to Idle. No new crash reports appeared during this check. Actual spoken-command accuracy remains a separate acceptance test.
+
 # Verification — September 15, 2026
 
 ## Hands-free follow-up timing

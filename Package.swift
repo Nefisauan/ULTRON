@@ -18,6 +18,7 @@ let package = Package(
         .executableTarget(name: "UltronVoicePreview", dependencies: ["UltronCore", "UltronUI"]),
         .executableTarget(name: "UltronMac", dependencies: ["UltronCore", "UltronUI", "UltronLink"]),
         .testTarget(name: "UltronCoreTests", dependencies: ["UltronCore"]),
+        .testTarget(name: "UltronMacTests", dependencies: ["UltronMac"]),
         .testTarget(name: "UltronLinkTests", dependencies: ["UltronLink"])
     ],
     swiftLanguageModes: [.v6]

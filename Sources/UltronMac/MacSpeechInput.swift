@@ -22,17 +22,21 @@ final class MacSpeechInput: ObservableObject {
     func start() {
         stop()
         transcript = ""
-        status = "Checking microphone and speech permissions…"
+        status = "Waiting for microphone permission…"
         isActive = true
         let id = generation
+        deadline = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(20))
+            guard !Task.isCancelled, let self, self.generation == id else { return }
+            self.finish("Voice startup timed out. Check microphone and speech permissions in System Settings, then retry.")
+        }
         startup = Task { [weak self] in
             guard let self else { return }
             let microphone = await AVCaptureDevice.requestAccess(for: .audio)
             guard generation == id else { return }
             guard microphone else { finish("Enable ULTRON in System Settings → Privacy & Security → Microphone."); return }
-            let speech = await withCheckedContinuation { continuation in
-                SFSpeechRecognizer.requestAuthorization { continuation.resume(returning: $0) }
-            }
+            status = "Waiting for speech recognition permission…"
+            let speech = await SpeechAuthorization.request()
             guard generation == id else { return }
             guard speech == .authorized else { finish("Enable ULTRON in System Settings → Privacy & Security → Speech Recognition."); return }
             guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US")),
@@ -72,6 +76,7 @@ final class MacSpeechInput: ObservableObject {
                 try engine.start()
                 isRecording = true
                 status = "Listening on device · tap microphone to finish · 30-second limit"
+                deadline?.cancel()
                 deadline = Task { [weak self] in
                     try? await Task.sleep(for: .seconds(30))
                     guard !Task.isCancelled, let self, self.generation == id else { return }
