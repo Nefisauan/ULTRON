@@ -23,6 +23,7 @@ final class MacSession: ObservableObject {
         commands = CommandController(voice: voice, registry: registry)
         do {
             try registry.register(OpenApplicationTool(controller: system))
+            try registry.register(OpenFavoriteTool(opener: system))
             try registry.register(OpenURLTool(opener: system))
             try registry.register(OpenFileTool(opener: system))
             try registry.register(ShowDashboardModuleTool())

@@ -2,7 +2,20 @@ import AppKit
 import UltronCore
 
 @MainActor
-final class MacSystemController: ApplicationController, ResourceOpener {
+final class MacSystemController: ApplicationController, ResourceOpener, FavoriteOpener {
+    func openFavorite(named name: String) async throws {
+        try Task.checkCancellation()
+        let file = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Safari/Bookmarks.plist")
+        let data: Data
+        do {
+            let handle = try FileHandle(forReadingFrom: file)
+            defer { try? handle.close() }
+            data = try handle.read(upToCount: 4_000_001) ?? Data()
+        } catch { throw CommandError.favoritesUnavailable }
+        let url = try SafariFavorites.resolve(name, in: data)
+        try Task.checkCancellation()
+        try await openURL(url)
+    }
     private let applications: [String: String] = [
         "safari": "com.apple.Safari",
         "xcode": "com.apple.dt.Xcode",

@@ -30,3 +30,9 @@ On Mac, click the iPhone icon and choose Start local hosting. Enter the displaye
 The channel uses Apple's Network framework with TLS 1.2 and an authenticated PSK AES-GCM cipher. There is no plaintext fallback or cloud relay. Connection, cancellation, incorrect-key rejection, and command-size bounds are tested on loopback; physical iPhone operation and OS Local Network permission flows still require acceptance testing. Mac Stop also disconnects the remote session. Cancelling a command cannot undo an already-opened app or URL.
 
 The local dashboard model now selects short observations that must match the extracted text verbatim. Unsupported generated claims are discarded; if no observation validates, the original page excerpt is shown. This is a grounded page review, not an assessment of charts or trends. Copy for ChatGPT remains available for deeper analysis.
+
+## Safari favorites
+
+Use `Open Favorite [exact saved title]` to open an HTTP(S) favorite in Safari. Matching ignores case and searches the standard Safari Favorites (`BookmarksBar`) folder and its subfolders. Other bookmarks and browsing history are not searched. Duplicate titles with distinct URLs are rejected; use an explicit URL or rename them in Safari.
+
+The Mac reads its local bookmark plist only for this command, with bounded input and traversal. It does not persist or upload the bookmark collection. macOS privacy restrictions may deny this read; the command then explains that you can use the web URL instead. Custom Favorites folders and Safari profile-specific bookmark stores are not supported. This integration uses Safari's local data format and may need adaptation if Apple changes it. Live access on the user's Safari profile remains unverified.

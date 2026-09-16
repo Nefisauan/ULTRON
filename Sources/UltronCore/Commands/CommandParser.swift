@@ -24,6 +24,9 @@ public struct CommandParser: Sendable {
         let normalized = trimmed.split(whereSeparator: \.isWhitespace).joined(separator: " ")
         let key = normalized.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: ".?!"))
         if let intent = Self.exact[key] { return intent }
+        if normalized.lowercased().hasPrefix("open favorite ") {
+            return .openFavorite(String(normalized.dropFirst(14)))
+        }
         if normalized.lowercased().hasPrefix("ask ") {
             return .ask(String(normalized.dropFirst(4)))
         }

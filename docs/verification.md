@@ -1,5 +1,12 @@
 # Verification — September 15, 2026
 
+## Safari favorite commands
+
+- 48 tests passed. New fixtures verify exact title matching, nested Favorites scope, exclusion of other bookmarks, duplicate ambiguity, unsafe URL rejection, malformed input, and input limits.
+- Mac package build passed and the local app bundle was updated. Restart ULTRON to load this build.
+- Live bookmark access has not been tested; macOS permissions and nonstandard Favorites/profile layouts may prevent resolution. No real bookmark content was read during these fixture tests.
+
+
 ## Conversation and live remote acceptance — September 15, 2026
 
 - 45 tests passed, including question/action routing, bounded memory, history transfer, mock labeling, oversized question rejection, and clearing memory while an action is pending.

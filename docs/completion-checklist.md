@@ -15,7 +15,7 @@ ULTRON is a working development app, not a finished general-purpose computer age
 
 1. **Voice acceptance:** test actual microphone input, wake phrase and follow-up timing, interruptions, output routes, false activations, accessibility, and battery use. Voice activation requires the running app and an explicitly enabled session. Clap activation is not implemented.
 2. **Analysis quality:** verify final source-grounded dashboard output live; add evaluated chart/image interpretation and stronger reasoning. Current excerpts do not establish trends or explain chart values. Screenshot vision is still a mock. Cloud services require an explicit provider and billing decision.
-3. **Computer actions:** add scoped app and document reading, Safari favorites support, and per-app integrations. Opening a file does not read it. Add confirmation and recovery for consequential workflows before implementing them.
+3. **Computer actions:** add scoped app and document reading, support for custom Safari Favorites folders/profiles, and per-app integrations. Opening a file does not read it. Add confirmation and recovery for consequential workflows before implementing them.
 4. **Conversation and workflows:** evaluate model accuracy and latency, add reviewed multi-step planning, streamed responses, editable persistent memory, and explicit permissions. Current AI replies cannot execute tools; history disappears on restart or Clear Conversation.
 5. **Live data:** replace sample business/market/project cards with authenticated integrations selected by the user. Keep the existing business dashboard as the source of truth.
 6. **Phone release:** test a physical iPhone on the same network, interruptions and reconnection; design persistent device pairing and revocation; complete signing and device distribution. The current connection is temporary and must be re-paired.
@@ -23,6 +23,7 @@ ULTRON is a working development app, not a finished general-purpose computer age
 
 ## Try the new conversation layer
 
+- `Open Favorite [saved title]`
 - `Ask explain what you can do`
 - `How does short-term memory work?`
 - `Ask summarize our conversation`
